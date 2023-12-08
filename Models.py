@@ -1,49 +1,20 @@
+from dotenv import load_dotenv
 import mysql.connector
+import os
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="123456789"
+load_dotenv()
+
+DB_info = {
+    "host": os.getenv("host"),
+    "user": os.getenv("user"),
+    "password": os.getenv("password"),
+    "database": os.getenv("database")
+}
+
+myDB = mysql.connector.connect(
+    host = DB_info["host"],
+    user = DB_info["user"],
+    password = DB_info["password"],
+    database = DB_info["database"]
 )
-
-mycursor = mydb.cursor()
-    
-def DB_Check(Connection):
-    
-    global check
-    
-    Connection.execute("SHOW DATABASES")
-    
-    for database in Connection:
-    
-        check = False
-        
-        database = database[0]
-        
-        if database != "Naato":
-            
-            check = False
-            
-        elif database == "Naato":
-            
-            check = True
-            
-            break
-    
-    if check == True:   
-
-        print("Naato DataBase founded.")
-        
-        mydb._database = "Naato"
-    
-    elif check != True:
-        
-        Connection.execute("CREATE DATABASE Naato")
-        
-        mydb._database = "Naato"
-        
-        print("Database is Created.")
-
-
-DB_Check(mycursor)
 
