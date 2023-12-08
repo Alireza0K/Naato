@@ -6,4 +6,38 @@ mydb = mysql.connector.connect(
     password="123456789"
 )
 
-print(mydb)
+mycursor = mydb.cursor()
+
+mycursor.execute("SHOW DATABASES")
+
+i = 0
+
+# print(mycursor)
+
+for database in mycursor:
+    
+    check = False
+    
+    database = database[0]
+    
+    if database != "Naato":
+        
+        check = False
+        
+    else:
+        
+        check = True
+        
+        print("Databese found. \nThat mean you don't need to create Database!!")
+        
+        break
+    
+if check != True:
+    
+    mycursor.execute("CREATE DATABASE Naato")
+    
+        
+        
+    
+
+    
