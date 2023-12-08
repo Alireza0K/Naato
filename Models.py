@@ -18,3 +18,33 @@ myDB = mysql.connector.connect(
     database = DB_info["database"]
 )
 
+mycursor = myDB.cursor()
+
+def TablesValidation(Connection):
+    
+    check = False
+    
+    Connection.execute("show tables")
+    
+    result = Connection.fetchall()
+    
+    counter = 0
+    
+    for table in result:
+        
+        counter += 1
+        
+    if counter != 6:
+        
+        check = False
+        
+        print("Validation Error!!, please install DataBase again.")
+    
+    elif counter == 6:
+        
+        check = True
+        
+    return check
+        
+
+TablesValidation(mycursor)
