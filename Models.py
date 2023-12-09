@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from faker import Faker
 import mysql.connector
 import hashlib
 import os
@@ -55,13 +56,17 @@ class Models:
             
         return check
     
-    def GroupCreation(self, GroupName):
+    def GroupCreation(self):
         
-        hashValue = hashlib.md5(GroupName.encode()).hexdigest()
+        faker = Faker()
+        
+        groupName = faker.name()
+        
+        hashValue = hashlib.md5(groupName.encode()).hexdigest()
         
         sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`) VALUES (NULL, %s, %s);"
         
-        values = (hashValue, GroupName)     
+        values = (hashValue, groupName)     
         
         mycursor.execute(sql, values)   
         
