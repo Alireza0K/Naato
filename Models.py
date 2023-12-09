@@ -92,7 +92,30 @@ class Models:
         myDB.commit()
         
         return
-
+    
+    def GetGroupStatus(self, groupID):
+        
+        check = False
+        
+        value = (groupID)
+        
+        sql = ("SELECT open FROM `groups` WHERE group_Hash = '%s'" % (value))
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        result = [i[0] for i in result]
+        
+        if result[0] != 1:
+            
+            check = False
+        
+        if result[0] == 1:
+            
+            check = True
+        
+        return check
+        
 model = Models(mycursor)
 
-model.GroupCreation()
