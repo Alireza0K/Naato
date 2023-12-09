@@ -67,7 +67,7 @@ class Models:
         
         hashValue = hashlib.md5((groupName + str(nowDateTime)).encode()).hexdigest()
         
-        sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`) VALUES (NULL, %s, %s);"
+        sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`, `open`) VALUES (NULL, %s, %s, 1);"
         
         values = (hashValue, groupName)     
         
@@ -75,6 +75,24 @@ class Models:
         
         myDB.commit()
         
-        return mycursor
+        return hashValue
+    
+    def UserCreation(self, name, username, groupID):
+        
+        sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`) VALUES (NULL, %s, %s, %s, %s, %s, %s);"
+        
+        points = 15
+        
+        userHash = hashlib.md5(username.encode()).hexdigest()
+        
+        values = (name, username, userHash, "", groupID, points)
+        
+        mycursor.execute(sql, values)
+        
+        myDB.commit()
+        
+        return
 
 model = Models(mycursor)
+
+model.GroupCreation()
