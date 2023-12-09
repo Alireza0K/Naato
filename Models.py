@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from faker import Faker
 import mysql.connector
 import hashlib
+import datetime
 import os
 
 load_dotenv()
@@ -62,7 +63,9 @@ class Models:
         
         groupName = faker.name()
         
-        hashValue = hashlib.md5(groupName.encode()).hexdigest()
+        nowDateTime = datetime.datetime.now() 
+        
+        hashValue = hashlib.md5((groupName + str(nowDateTime)).encode()).hexdigest()
         
         sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`) VALUES (NULL, %s, %s);"
         
