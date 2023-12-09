@@ -79,6 +79,12 @@ class Models:
     
     def UserCreation(self, name, username, groupID):
         
+        check = self.GetGroupStatus(groupID)
+        
+        if check != True:
+            
+            return False
+        
         sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`) VALUES (NULL, %s, %s, %s, %s, %s, %s);"
         
         points = 15
@@ -91,7 +97,7 @@ class Models:
         
         myDB.commit()
         
-        return
+        return True
     
     def GetGroupStatus(self, groupID):
         
@@ -119,3 +125,6 @@ class Models:
         
 model = Models(mycursor)
 
+fake = Faker()
+
+model.UserCreation(fake.name(), fake.user_name(), "6d90bec4f4d2699af6730949efe34ba1")
