@@ -81,6 +81,8 @@ class Models:
         
         check = self.GetGroupStatus(groupID)
         
+        self.TrueStatus(groupID)
+        
         if check != True:
             
             return False
@@ -122,9 +124,25 @@ class Models:
             check = True
         
         return check
+
+    def TrueStatus(self, groupID):
+        
+        sql = "select name from users where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        lengthOfUsers = len(result)
+        
+        if lengthOfUsers >= 5:
+            
+            sql = ("update `groups` set open = 0 where group_Hash = '%s'" % (groupID))
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+        
+        return result
         
 model = Models(mycursor)
-
-fake = Faker()
-
-model.UserCreation(fake.name(), fake.user_name(), "6d90bec4f4d2699af6730949efe34ba1")
