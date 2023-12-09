@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import mysql.connector
+import hashlib
 import os
 
 load_dotenv()
@@ -18,33 +19,54 @@ myDB = mysql.connector.connect(
     database = DB_info["database"]
 )
 
+global mycursor 
+
 mycursor = myDB.cursor()
 
-def TablesValidation(Connection):
+class Models:
     
-    check = False
-    
-    Connection.execute("show tables")
-    
-    result = Connection.fetchall()
-    
-    counter = 0
-    
-    for table in result:
+    def __init__(self, Connection):
         
-        counter += 1
-        
-    if counter != 6:
+        self.Connection = Connection
+
+    def TablesValidation(self):
         
         check = False
         
-        print("Validation Error!!, please install DataBase again.")
+        mycursor.execute("show tables")
+        
+        result = mycursor.fetchall()
+        
+        counter = 0
+        
+        for table in result:
+            
+            counter += 1
+            
+        if counter != 6:
+            
+            check = False
+            
+            print("Validation Error!!, please install DataBase again.")
+        
+        elif counter == 6:
+            
+            check = True
+            
+        return check
     
-    elif counter == 6:
+    def GroupCreation(self, GroupName):
         
-        check = True
+        hashValue = hashlib.md5(GroupName.encode()).hexdigest()
         
-    return check
+        sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`) VALUES (NULL, %s, %s);"
         
+        values = (hashValue, GroupName)     
+        
+        mycursor.execute(sql, values)   
+        
+        myDB.commit()
+        
+        return mycursor
 
-TablesValidation(mycursor)
+model = Models(mycursor)
