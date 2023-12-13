@@ -27,9 +27,11 @@ mycursor = myDB.cursor()
 
 class Models:
     
-    def __init__(self, Connection):
+    def __init__(self):
         
-        self.Connection = Connection
+        self
+        
+        pass
 
     def TablesValidation(self):
         
@@ -145,4 +147,4 @@ class Models:
         
         return result
         
-model = Models(mycursor)
+model = Models()
