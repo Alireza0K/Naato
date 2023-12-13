@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from faker import Faker
+from faker.providers import lorem
 import mysql.connector
 import hashlib
 import datetime
@@ -170,5 +171,15 @@ class Models:
         myDB.commit()
         
         return (firstUser[1], "is narrator")
+    
+    def GetFacts(self, userID, fact):
+        
+        sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return True
         
 model = Models()
