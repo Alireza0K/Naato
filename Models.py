@@ -146,5 +146,15 @@ class Models:
             myDB.commit()
         
         return result
+    
+    def GetUsersByGroup(self, groupID):
+        
+        sql = "select * from `users` where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
         
 model = Models()
