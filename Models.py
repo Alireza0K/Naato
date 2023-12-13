@@ -70,9 +70,9 @@ class Models:
         
         hashValue = hashlib.md5((groupName + str(nowDateTime)).encode()).hexdigest()
         
-        sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`, `open`) VALUES (NULL, %s, %s, 1);"
+        sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`, `group_question_Hash`, `open`) VALUES (NULL, %s, %s, %s, '1');"
         
-        values = (hashValue, groupName)     
+        values = (hashValue, groupName, hashValue)     
         
         mycursor.execute(sql, values)   
         
@@ -175,6 +175,34 @@ class Models:
     def GetFacts(self, userID, fact):
         
         sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return True
+    
+    def GetQuestions(self, groupID, question):
+        
+        question_Hash = hash(question + str(datetime.datetime.now()))
+        
+        sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`) values (NULL, %s, '%s', '%s')" % (question_Hash, groupID, question)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        for count in range(0,4):
+        
+            fake = Faker()
+            
+            self.GetAnswers(question_Hash, fake.paragraph())
+        
+        return True
+    
+    def GetAnswers(self, question_Hash, answers):
+        
+        sql = "insert into `Answers` (`ID`, `questionID`, `text`) values (NULL, '%s', '%s')" % (question_Hash, answers)
         
         mycursor.execute(sql)
         
