@@ -156,5 +156,19 @@ class Models:
         result = mycursor.fetchall()
         
         return result
+    
+    def ChangeUserNickname(self, groupID, nickname):
+        
+        result = self.GetUsersByGroup(groupID)
+        
+        firstUser = result[0]
+        
+        sql = "update `users` set nickname = '%s' where id = %s" % (nickname, firstUser[0])
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return (firstUser[1], "is narrator")
         
 model = Models()
