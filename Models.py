@@ -32,7 +32,7 @@ class Models:
         
         self
         
-        pass
+        self.TablesValidation()
 
     def TablesValidation(self):
         
@@ -170,7 +170,7 @@ class Models:
         
         myDB.commit()
         
-        return (firstUser[1], "is narrator")
+        return (firstUser[1], "is", nickname)
     
     def GetFacts(self, userID, fact):
         
@@ -211,3 +211,5 @@ class Models:
         return True
         
 model = Models()
+
+fake = Faker()
