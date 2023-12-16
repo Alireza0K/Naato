@@ -1,4 +1,5 @@
 from Models import *
+import time
 
 class Controller:
     
@@ -16,15 +17,31 @@ class Controller:
             
             user = self.GetUserInformation(group) # Get name and username for add theos to group 
             
-            # self.GetFactsFromEachUser(user) # get userID and fact from that user to add a fact to facts tabel
-            
         model.ChangeUserNickname(group, "narrator") # choose a narrator
             
         print("first user that enter his name is Narrator")
         
         naato = model.ChooseNaato(group)
         
-        print(naato)
+        users = model.GetUsersByGroup(group)
+        
+        for user in users:
+            
+            if user[4] != "narrator":
+                
+                print(user[1], "Come in and write your facts!!")
+            
+                self.GetFactsFromEachUser(user[3]) # get userID and fact from each user to add a fact to facts tabel
+            
+            if user[4] == "Naato":
+                
+                print("You are Naato, attention!!\nPay close attention to the questions and answers and keep them in your mind")
+                
+                time.sleep(3)
+            
+            time.sleep(2)
+            
+            os.system("clear")
         
         return True
     
