@@ -219,7 +219,7 @@ class Models:
             
             answer = input(str(count+1) + ". enter answer: ")
         
-            answer = fake.paragraph()
+            answer = fake.sentence()
             
             self.GetAnswers(question_Hash, answer)
         
@@ -234,7 +234,43 @@ class Models:
         myDB.commit()
         
         return True
+    
+    def ShowQuestionsAndAnswers(self, groupID):
+        
+        sql = "select * from questions where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        questions = mycursor.fetchall()
+        
+        for question in questions:
+            
+            print("\nQuestion is: ▼")
+            
+            print(question[3], "\n")
+            
+            answers = self.ShowAnswers(question[1])
+            
+            print("Answer is: ▼")
+            
+            for answer in answers:
+                
+                print(answer[2], "\n")
+        
+        return True
+    
+    def ShowAnswers(self, questionID):
+        
+        sql = "select * from `Answers` where questionID = '%s'" % (questionID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
         
 model = Models()
 
 fake = Faker()
+
+questions = model.ShowQuestionsAndAnswers("ae3b87a015db3e60eeeb6883f8ddd42c")
