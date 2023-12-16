@@ -272,5 +272,3 @@ class Models:
 model = Models()
 
 fake = Faker()
-
-questions = model.ShowQuestionsAndAnswers("ae3b87a015db3e60eeeb6883f8ddd42c")
