@@ -4,6 +4,7 @@ from faker.providers import lorem
 import mysql.connector
 import hashlib
 import datetime
+import random
 import os
 
 load_dotenv()
@@ -172,6 +173,28 @@ class Models:
         
         return (firstUser[1], "is", nickname)
     
+    def ChooseNaato(self, groupID):
+        
+        sql_select = "SELECT * FROM `users` WHERE groupID = '%s' and nickname <> 'narrator';" % (groupID)
+        
+        mycursor.execute(sql_select)
+        
+        result = mycursor.fetchall()
+        
+        usersLen = len(result)
+        
+        choose = random.randint(0, (usersLen - 1))
+        
+        user = result[choose][0]
+        
+        sql = "update `users` set nickname = '%s' where id = %s" % ("Naato", user)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()        
+
+        return user
+    
     def GetFacts(self, userID, fact):
         
         sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
@@ -193,10 +216,12 @@ class Models:
         myDB.commit()
         
         for count in range(0,4):
-        
-            fake = Faker()
             
-            self.GetAnswers(question_Hash, fake.paragraph())
+            answer = input(str(count+1) + ". enter answer: ")
+        
+            answer = fake.paragraph()
+            
+            self.GetAnswers(question_Hash, answer)
         
         return True
     
