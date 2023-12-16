@@ -221,13 +221,21 @@ class Models:
         
             answer = fake.sentence()
             
-            self.GetAnswers(question_Hash, answer)
+            check = input("if its true enter 1 or not 0:")
+            
+            check = 0
+            
+            if count == 3:
+                
+                check = 1
+            
+            self.GetAnswers(question_Hash, answer, check)
         
         return True
     
-    def GetAnswers(self, question_Hash, answers):
+    def GetAnswers(self, question_Hash, answers, check):
         
-        sql = "insert into `Answers` (`ID`, `questionID`, `text`) values (NULL, '%s', '%s')" % (question_Hash, answers)
+        sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
         
         mycursor.execute(sql)
         
@@ -254,8 +262,14 @@ class Models:
             print("Answer is: ▼")
             
             for answer in answers:
-                
-                print(answer[2], "\n")
+                if answer[3] == 1:
+                    
+                    print(answer[2], "! ✅ !", "\n")
+                    
+                else:
+                    
+                    print(answer[2], "\n")
+                    
         
         return True
     
