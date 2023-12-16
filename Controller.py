@@ -35,9 +35,9 @@ class Controller:
                 
                     question = input(str(x+1)+". question: ")
                     
-                    question = fake.paragraph()
+                    question = fake.sentence()
                     
-                    model.GetQuestions(group, question)
+                    model.GetQuestions(group, question) # this is for get questions from Narrator and put it in questions tabel
             
             if user[4] != "narrator":
                 
@@ -49,7 +49,9 @@ class Controller:
                 
                 print("You are Naato, attention!!\nPay close attention to the questions and answers and keep them in your mind")
                 
-                time.sleep(3)
+                model.ShowQuestionsAndAnswers(group)
+                
+                time.sleep(3) # if you want make the game for Naato easier increase this
             
             time.sleep(2)
             
