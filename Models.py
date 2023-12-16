@@ -102,7 +102,7 @@ class Models:
         
         myDB.commit()
         
-        return True
+        return userHash
     
     def GetGroupStatus(self, groupID):
         

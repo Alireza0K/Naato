@@ -10,39 +10,45 @@ class Controller:
     
     def Start(self):
         
-        group = model.GroupCreation()
+        group = model.GroupCreation() # First step Create Groups 
         
         for i in range(0,6):
             
-            name = input("name: ")
+            user = self.GetUserInformation(group) # Get name and username for add theos to group 
             
-            name = fake.name()
+            self.GetFactsFromEachUser(user) # get userID and fact from that user to add a fact to facts tabel
             
-            username = input("username: ")
+        model.ChangeUserNickname(group, "narrator") # choose a narrator
             
-            username = fake.user_name()
-        
-            model.UserCreation(name, username, group)
-            
-            
-            
-        model.ChangeUserNickname(group, "narrator")
-        
         print("first user that enter his name is Narrator")
+
+        return
+    
+    def GetUserInformation(self, groupID):
         
-        users = model.GetUsersByGroup(group)
-        
-        for user in users:
+        name = input("name: ") 
             
-            for count in range(0,5):
+        name = fake.name()
             
-                fact = input("enter the fact: ")
-                
-                fact = fake.paragraph()
-                
-                model.GetFacts(user[3], fact)
+        username = input("username: ")
+            
+        username = fake.user_name()
         
-        return 
+        user = model.UserCreation(name, username, groupID) 
+        
+        return user
+    
+    def GetFactsFromEachUser(self, user):
+        
+        for x in range(0,5):
+        
+            fact = input(str(x+1) + ". enter the fact: ")
+                        
+            fact = fake.paragraph()
+                
+            model.GetFacts(user, fact)
+        
+        return True
     
     def control(self, command):
         
