@@ -16,13 +16,17 @@ class Controller:
             
             user = self.GetUserInformation(group) # Get name and username for add theos to group 
             
-            self.GetFactsFromEachUser(user) # get userID and fact from that user to add a fact to facts tabel
+            # self.GetFactsFromEachUser(user) # get userID and fact from that user to add a fact to facts tabel
             
         model.ChangeUserNickname(group, "narrator") # choose a narrator
             
         print("first user that enter his name is Narrator")
-
-        return
+        
+        naato = model.ChooseNaato(group)
+        
+        print(naato)
+        
+        return True
     
     def GetUserInformation(self, groupID):
         
