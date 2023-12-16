@@ -216,10 +216,12 @@ class Models:
         myDB.commit()
         
         for count in range(0,4):
-        
-            fake = Faker()
             
-            self.GetAnswers(question_Hash, fake.paragraph())
+            answer = input(str(count+1) + ". enter answer: ")
+        
+            answer = fake.paragraph()
+            
+            self.GetAnswers(question_Hash, answer)
         
         return True
     

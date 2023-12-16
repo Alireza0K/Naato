@@ -27,6 +27,18 @@ class Controller:
         
         for user in users:
             
+            if user[4] == "narrator":
+                
+                print("please Write the questions and answers.")
+                
+                for x in range(0,4):
+                
+                    question = input(str(x+1)+". question: ")
+                    
+                    question = fake.paragraph()
+                    
+                    model.GetQuestions(group, question)
+            
             if user[4] != "narrator":
                 
                 print(user[1], "Come in and write your facts!!")
