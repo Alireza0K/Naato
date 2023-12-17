@@ -89,7 +89,7 @@ class Controller:
             
             os.system("clear")
         
-        return
+        return True
     
     def control(self, command):
         
