@@ -293,6 +293,34 @@ class Models:
         
         score = result[0][1]
         
+        if command == True:
+            
+            score = self.IncreaseScore(groupID, score)
+            
+        if command == False:
+            
+            score = self.DecreaseScore(groupID, score)
+        
+        return score
+    
+    def IncreaseScore(self, groupID, score):
+        
+        sql = "update `score_scope` set length = '%s' where groupID = '%s'" % (score + 5,groupID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return score
+    
+    def DecreaseScore(self, groupID, score):
+        
+        sql = "update `score_scope` set length = '%s' where groupID = '%s'" % (score - 5,groupID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
         return score
         
 model = Models()
