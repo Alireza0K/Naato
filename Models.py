@@ -4,6 +4,7 @@ from faker.providers import lorem
 import mysql.connector
 import hashlib
 import datetime
+import random
 import os
 
 load_dotenv()
@@ -32,7 +33,7 @@ class Models:
         
         self
         
-        pass
+        self.TablesValidation()
 
     def TablesValidation(self):
         
@@ -102,7 +103,7 @@ class Models:
         
         myDB.commit()
         
-        return True
+        return userHash
     
     def GetGroupStatus(self, groupID):
         
@@ -170,7 +171,29 @@ class Models:
         
         myDB.commit()
         
-        return (firstUser[1], "is narrator")
+        return (firstUser[1], "is", nickname)
+    
+    def ChooseNaato(self, groupID):
+        
+        sql_select = "SELECT * FROM `users` WHERE groupID = '%s' and nickname <> 'narrator';" % (groupID)
+        
+        mycursor.execute(sql_select)
+        
+        result = mycursor.fetchall()
+        
+        usersLen = len(result)
+        
+        choose = random.randint(0, (usersLen - 1))
+        
+        user = result[choose][0]
+        
+        sql = "update `users` set nickname = '%s' where id = %s" % ("Naato", user)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()        
+
+        return user
     
     def GetFacts(self, userID, fact):
         
@@ -193,21 +216,73 @@ class Models:
         myDB.commit()
         
         for count in range(0,4):
-        
-            fake = Faker()
             
-            self.GetAnswers(question_Hash, fake.paragraph())
+            answer = input(str(count+1) + ". enter answer: ")
+        
+            answer = fake.sentence()
+            
+            check = input("if its true enter 1 or not 0:")
+            
+            check = 0
+            
+            if count == 3:
+                
+                check = 1
+            
+            self.GetAnswers(question_Hash, answer, check)
         
         return True
     
-    def GetAnswers(self, question_Hash, answers):
+    def GetAnswers(self, question_Hash, answers, check):
         
-        sql = "insert into `Answers` (`ID`, `questionID`, `text`) values (NULL, '%s', '%s')" % (question_Hash, answers)
+        sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
         
         mycursor.execute(sql)
         
         myDB.commit()
         
         return True
+    
+    def ShowQuestionsAndAnswers(self, groupID):
+        
+        sql = "select * from questions where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        questions = mycursor.fetchall()
+        
+        for question in questions:
+            
+            print("\nQuestion is: ▼")
+            
+            print(question[3], "\n")
+            
+            answers = self.ShowAnswers(question[1])
+            
+            print("Answer is: ▼")
+            
+            for answer in answers:
+                if answer[3] == 1:
+                    
+                    print(answer[2], "! ✅ !", "\n")
+                    
+                else:
+                    
+                    print(answer[2], "\n")
+                    
+        
+        return True
+    
+    def ShowAnswers(self, questionID):
+        
+        sql = "select * from `Answers` where questionID = '%s'" % (questionID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
         
 model = Models()
+
+fake = Faker()
