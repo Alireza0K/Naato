@@ -282,6 +282,18 @@ class Models:
         result = mycursor.fetchall()
         
         return result
+    
+    def ScoreScope(self, groupID, command = None):
+        
+        sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        score = result[0][1]
+        
+        return score
         
 model = Models()
 
