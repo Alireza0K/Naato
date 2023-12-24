@@ -25,6 +25,40 @@ class Controller:
         
         users = model.GetUsersByGroup(group)
         
+        self.GameFirstSection(users, group) # this is the first section of the game for *Choosing* Naato and *Narrator*
+        
+        
+        
+        return True
+    
+    def GetUserInformation(self, groupID):
+        
+        name = input("name: ") 
+            
+        name = fake.name()
+            
+        username = input("username: ")
+            
+        username = fake.user_name()
+        
+        user = model.UserCreation(name, username, groupID) 
+        
+        return user
+    
+    def GetFactsFromEachUser(self, user):
+        
+        for x in range(0,5):
+        
+            fact = input(str(x+1) + ". enter the fact: ")
+                        
+            fact = fake.paragraph()
+                
+            model.GetFacts(user, fact)
+        
+        return True
+    
+    def GameFirstSection(self, users, group):
+        
         for user in users:
             
             if user[4] == "narrator":
@@ -56,32 +90,6 @@ class Controller:
             time.sleep(2)
             
             os.system("clear")
-        
-        return True
-    
-    def GetUserInformation(self, groupID):
-        
-        name = input("name: ") 
-            
-        name = fake.name()
-            
-        username = input("username: ")
-            
-        username = fake.user_name()
-        
-        user = model.UserCreation(name, username, groupID) 
-        
-        return user
-    
-    def GetFactsFromEachUser(self, user):
-        
-        for x in range(0,5):
-        
-            fact = input(str(x+1) + ". enter the fact: ")
-                        
-            fact = fake.paragraph()
-                
-            model.GetFacts(user, fact)
         
         return True
     
