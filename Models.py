@@ -6,6 +6,7 @@ import hashlib
 import datetime
 import random
 import os
+import time
 
 load_dotenv()
 
@@ -283,7 +284,7 @@ class Models:
         
         return result
     
-    def QandA(self, groupID):
+    def Cycle(self, groupID, NaatoID):
         
         sql = "select * from questions where groupID = '%s'" % (groupID)
         
@@ -291,7 +292,13 @@ class Models:
         
         questions = mycursor.fetchall()
         
+        cycleCounter = 0
+        
+        Counter = 0
+        
         for question in questions:
+            
+            cycleCounter += 1
             
             print("\nQuestion is: ▼")
             
@@ -319,11 +326,29 @@ class Models:
                 
                 self.ScoreScope(groupID, True)
                 
-            else:
+            elif answers[userAnswer-1][3] != 1:
                 
                 print("You Select Wrong Answer!!!")
                 
                 self.ScoreScope(groupID, False)
+                
+            if cycleCounter == 2:
+                
+                Counter += 1
+                
+                print("|****** (Fact) ******|")
+                
+                sql = "select * from `facts` where userID = '%s'" % (NaatoID)
+            
+                mycursor.execute(sql)
+                        
+                facts = mycursor.fetchall()
+                        
+                print(str(Counter)+".", facts[Counter][2])
+                
+                time.sleep(5)
+                
+                os.system("clear")
             
         return True
     
@@ -370,3 +395,5 @@ class Models:
 model = Models()
 
 fake = Faker()
+
+model.Cycle("843ed23b14da303d12b586a85dbaa3db","64c03376cf148232ad78e5cf890a64f6")
