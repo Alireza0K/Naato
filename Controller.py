@@ -27,6 +27,8 @@ class Controller:
         
         self.GameFirstSection(users, group) # this is the first section of the game for *Choosing* Naato and *Narrator*
         
+        
+        
         return True
     
     def GetUserInformation(self, groupID):

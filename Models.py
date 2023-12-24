@@ -283,6 +283,50 @@ class Models:
         
         return result
     
+    def QandA(self, groupID):
+        
+        sql = "select * from questions where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        questions = mycursor.fetchall()
+        
+        for question in questions:
+            
+            print("\nQuestion is: ▼")
+            
+            print(question[3], "\n")
+            
+            answers = self.ShowAnswers(question[1])
+            
+            count = 0
+            
+            print("Answer is: ▼")
+            
+            for answer in answers:
+                
+                count += 1
+                    
+                print(str(count)+".", answer[2], "\n")
+                    
+            userAnswer = int(input("Choose the correct answer: "))
+            
+            os.system("clear")
+            
+            if answers[userAnswer-1][3] == 1:
+                
+                print("Congratulation, You Select Correct Answer")
+                
+                self.ScoreScope(groupID, True)
+                
+            else:
+                
+                print("You Select Wrong Answer!!!")
+                
+                self.ScoreScope(groupID, False)
+            
+        return True
+    
     def ScoreScope(self, groupID, command = None):
         
         sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
