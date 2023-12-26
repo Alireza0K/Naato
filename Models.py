@@ -334,23 +334,29 @@ class Models:
                 
             if cycleCounter == 2:
                 
-                Counter += 1
-                
-                print("|****** (Fact) ******|")
-                
-                sql = "select * from `facts` where userID = '%s'" % (NaatoID)
-            
-                mycursor.execute(sql)
-                        
-                facts = mycursor.fetchall()
-                        
-                print(str(Counter)+".", facts[Counter][2])
-                
-                time.sleep(5)
-                
-                os.system("clear")
+                self.ShowFacts(Counter, NaatoID)
             
         return True
+    
+    def ShowFacts(self, Counter, NaatoID):
+        
+        Counter += 1
+                
+        print("|****** (Fact) ******|")
+                
+        sql = "select * from `facts` where userID = '%s'" % (NaatoID)
+            
+        mycursor.execute(sql)
+                        
+        facts = mycursor.fetchall()
+                        
+        print(str(Counter)+".", facts[Counter][2])
+                
+        time.sleep(5)
+                
+        os.system("clear")
+        
+        return facts[Counter][2]
     
     def ScoreScope(self, groupID, command = None):
         
