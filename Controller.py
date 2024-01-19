@@ -26,7 +26,7 @@ class Controller:
         
         self.GameFirstSection(users, group) # this is the first section of the game for *Choosing* Naato and *Narrator*
         
-        
+        model.CycleSeter(group, naato)
         
         return True
     

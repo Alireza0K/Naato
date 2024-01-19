@@ -188,13 +188,15 @@ class Models:
         
         user = result[choose][0]
         
+        naatoHash = result[choose][3]
+        
         sql = "update `users` set nickname = '%s' where id = %s" % ("Naato", user)
         
         mycursor.execute(sql)
         
         myDB.commit()        
 
-        return user
+        return naatoHash
     
     def GetFacts(self, userID, fact):
         
@@ -286,6 +288,8 @@ class Models:
     
     def Cycle(self, groupID, NaatoID):
         
+        self.ScoreScope(groupID)
+        
         sql = "select * from questions where groupID = '%s'" % (groupID)
         
         mycursor.execute(sql)
@@ -324,13 +328,13 @@ class Models:
                 
                 print("Congratulation, You Select Correct Answer")
                 
-                self.ScoreScope(groupID, True)
+                self.AutoScoreScope(groupID, True)
                 
             elif answers[userAnswer-1][3] != 1:
                 
                 print("You Select Wrong Answer!!!")
                 
-                self.ScoreScope(groupID, False)
+                self.AutoScoreScope(groupID, False)
                 
             if cycleCounter == 2:
                 
@@ -358,7 +362,17 @@ class Models:
         
         return facts[Counter][2]
     
-    def ScoreScope(self, groupID, command = None):
+    def ScoreScope(self, groupID):
+        
+        sql = "INSERT INTO `score_scope` (`ID`, `length`, `groupID`) VALUES (NULL, '40', '%s');" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return
+    
+    def AutoScoreScope(self, groupID, command = None):
         
         sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
         
@@ -397,9 +411,13 @@ class Models:
         myDB.commit()
         
         return score
+    
+    def CycleSeter(self, groupID, naatoID):
+        
+        self.Cycle(groupID, naatoID)
+        
+        return True
         
 model = Models()
 
 fake = Faker()
-
-model.Cycle("843ed23b14da303d12b586a85dbaa3db","64c03376cf148232ad78e5cf890a64f6")
