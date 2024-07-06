@@ -1,2 +1,6 @@
 .env
 __pycache__
+bot.session
+bot.session-journal
+NaatoTest.py
+log.txt
