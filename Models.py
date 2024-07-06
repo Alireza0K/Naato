@@ -6,6 +6,7 @@ import hashlib
 import datetime
 import random
 import os
+import time
 
 load_dotenv()
 
@@ -187,13 +188,15 @@ class Models:
         
         user = result[choose][0]
         
+        naatoHash = result[choose][3]
+        
         sql = "update `users` set nickname = '%s' where id = %s" % ("Naato", user)
         
         mycursor.execute(sql)
         
         myDB.commit()        
 
-        return user
+        return naatoHash
     
     def GetFacts(self, userID, fact):
         
@@ -283,7 +286,9 @@ class Models:
         
         return result
     
-    def QandA(self, groupID):
+    def Cycle(self, groupID, NaatoID):
+        
+        self.ScoreScope(groupID)
         
         sql = "select * from questions where groupID = '%s'" % (groupID)
         
@@ -291,7 +296,13 @@ class Models:
         
         questions = mycursor.fetchall()
         
+        cycleCounter = 0
+        
+        Counter = 0
+        
         for question in questions:
+            
+            cycleCounter += 1
             
             print("\nQuestion is: ▼")
             
@@ -317,17 +328,51 @@ class Models:
                 
                 print("Congratulation, You Select Correct Answer")
                 
-                self.ScoreScope(groupID, True)
+                self.AutoScoreScope(groupID, True)
                 
-            else:
+            elif answers[userAnswer-1][3] != 1:
                 
                 print("You Select Wrong Answer!!!")
                 
-                self.ScoreScope(groupID, False)
+                self.AutoScoreScope(groupID, False)
+                
+            if cycleCounter == 2:
+                
+                self.ShowFacts(Counter, NaatoID)
             
         return True
     
-    def ScoreScope(self, groupID, command = None):
+    def ShowFacts(self, Counter, NaatoID):
+        
+        Counter += 1
+                
+        print("|****** (Fact) ******|")
+                
+        sql = "select * from `facts` where userID = '%s'" % (NaatoID)
+            
+        mycursor.execute(sql)
+                        
+        facts = mycursor.fetchall()
+                        
+        print(str(Counter)+".", facts[Counter][2])
+                
+        time.sleep(5)
+                
+        os.system("clear")
+        
+        return facts[Counter][2]
+    
+    def ScoreScope(self, groupID):
+        
+        sql = "INSERT INTO `score_scope` (`ID`, `length`, `groupID`) VALUES (NULL, '40', '%s');" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return
+    
+    def AutoScoreScope(self, groupID, command = None):
         
         sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
         
@@ -366,6 +411,12 @@ class Models:
         myDB.commit()
         
         return score
+    
+    def CycleSeter(self, groupID, naatoID):
+        
+        self.Cycle(groupID, naatoID)
+        
+        return True
         
 model = Models()
 
