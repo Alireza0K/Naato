@@ -5,30 +5,34 @@ class Controller:
     def __init__(self, command):
         
         self.command = command
-        
-        self.control(self.command)
     
-    def Start(self):
+    def Start(self, h, G = None):
         
-        group = model.GroupCreation() # First step Create Groups 
+        if h == 0:
         
-        for i in range(0,6):
+            group = model.GroupCreation() # First step Create Groups 
             
-            user = self.GetUserInformation(group) # Get name and username for add theos to group 
+        elif h == 1:
             
-        model.ChangeUserNickname(group, "narrator") # choose a narrator
+            group = G
+        
+        # for i in range(0,6):
             
-        print("first user that enter his name is Narrator")
+        #     user = self.GetUserInformation(group[0]) # Get name and username for add theos to group 
+            
+        # model.ChangeUserNickname(group[0], "narrator") # choose a narrator
+            
+        # print("first user that enter his name is Narrator")
         
-        naato = model.ChooseNaato(group)
+        # naato = model.ChooseNaato(group[0])
         
-        users = model.GetUsersByGroup(group)
+        # users = model.GetUsersByGroup(group[0])
         
-        self.GameFirstSection(users, group) # this is the first section of the game for *Choosing* Naato and *Narrator*
+        # self.GameFirstSection(users, group) # this is the first section of the game for *Choosing* Naato and *Narrator*
         
-        model.CycleSeter(group, naato)
+        # model.CycleSeter(group, naato)
         
-        return True
+        return group
     
     def GetUserInformation(self, groupID):
         
@@ -84,20 +88,10 @@ class Controller:
                 
                 model.ShowQuestionsAndAnswers(group)
                 
-                time.sleep(3) # if you want make the game for Naato easier increase this
+                time.sleep(5) # if you want make the game for Naato easier increase this
             
             time.sleep(2)
             
             os.system("clear")
         
         return True
-    
-    def control(self, command):
-        
-        if command == "/start":
-            
-            self.Start()
-        
-        return True
-    
-control = Controller("/start")
