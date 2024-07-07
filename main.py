@@ -129,7 +129,7 @@ async def callback(event):
         
         id = cont.Start(0)
         
-        await event.respond(f"آیدی گروه شما: {id[0]}")
+        await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه {id[1]} شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: {id[0]}", parse_mode="html")
         
     elif event.data == b"9":
         
