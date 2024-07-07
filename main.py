@@ -143,15 +143,16 @@ async def callback(event):
         
         async def handler(event):
             
-            groupName = cont.GetGroupInformation(event.message.message)
+            groupinfo = cont.GetGroupInformation(event.message.message)
             
-            groupName = groupName[0][0][0]
+            groupName = groupinfo[0][0][2]
         
             regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
             
             if regesterTheUser:
                 
                 await event.respond(f"شما با موافقیت عضو گروه {groupName}")
+                
 client.start()
 
 client.run_until_disconnected()

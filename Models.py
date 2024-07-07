@@ -136,21 +136,11 @@ class Models:
         
         value = (groupID)
         
-        sql = ("SELECT group_name FROM `groups` WHERE group_Hash = '%s'" % (value))
+        sql = ("SELECT * FROM `groups` WHERE group_Hash = '%s'" % (value))
         
         mycursor.execute(sql)
         
         result = mycursor.fetchall()
-        
-        # result = [i[0] for i in result]
-        
-        # if result[0] != 1:
-            
-        #     check = False
-        
-        # if result[0] == 1:
-            
-        #     check = True
         
         return [result]
 
@@ -196,7 +186,7 @@ class Models:
         
         myDB.commit()
         
-        return (firstUser[1], "is", nickname)
+        return [firstUser[1], "is", nickname]
     
     def ChooseNaato(self, groupID):
         

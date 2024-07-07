@@ -64,6 +64,10 @@ class Controller:
         
         return True
     
+    def ChooseNarrator(self, group):
+        
+        model.ChangeUserNickname(group[0], "narrator")
+    
     def GameFirstSection(self, users, group):
         
         for user in users:
