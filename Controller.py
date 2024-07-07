@@ -34,15 +34,7 @@ class Controller:
         
         return group
     
-    def GetUserInformation(self, groupID):
-        
-        name = input("name: ") 
-            
-        name = fake.name()
-            
-        username = input("username: ")
-            
-        username = fake.user_name()
+    def GetUserInformation(self, groupID, name, username):
         
         user = model.UserCreation(name, username, groupID) 
         

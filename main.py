@@ -37,6 +37,8 @@ async def start(event):
         ]
     ]
     
+    global User
+    
     User = event.sender
     
     print(f"user-ID -> {User.id} username -> {User.username}")
@@ -128,6 +130,8 @@ async def callback(event):
     elif event.data == b"8":
         
         id = cont.Start(0)
+        
+        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.username)
         
         await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه {id[1]} شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: {id[0]}", parse_mode="html")
         
