@@ -130,6 +130,30 @@ class Models:
         
         return check
 
+    def GetGroupInfo(self, groupID):
+        
+        check = False
+        
+        value = (groupID)
+        
+        sql = ("SELECT group_name FROM `groups` WHERE group_Hash = '%s'" % (value))
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        # result = [i[0] for i in result]
+        
+        # if result[0] != 1:
+            
+        #     check = False
+        
+        # if result[0] == 1:
+            
+        #     check = True
+        
+        return [result]
+
     def TrueStatus(self, groupID):
         
         sql = "select name from users where groupID = '%s'" % (groupID)

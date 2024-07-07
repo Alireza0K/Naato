@@ -46,6 +46,12 @@ class Controller:
         
         return user
     
+    def GetGroupInformation(self,GroupID):
+        
+        info = model.GetGroupInfo(GroupID)
+        
+        return info
+    
     def GetFactsFromEachUser(self, user):
         
         for x in range(0,5):
