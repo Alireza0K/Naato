@@ -1,5 +1,7 @@
 from Models import *
 
+import Handler
+
 class Controller:
     
     def __init__(self, command):
@@ -35,6 +37,10 @@ class Controller:
         return group
     
     def GetUserInformation(self, groupID, name, username):
+        
+        handler = Handler.ChekUserNameNotEmpty(username)
+        
+        username = handler
         
         user = model.UserCreation(name, username, groupID) 
         
