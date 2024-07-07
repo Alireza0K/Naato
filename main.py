@@ -2,6 +2,8 @@ from telethon.sync import TelegramClient, events, Button
 
 from dotenv import load_dotenv
 
+from Controller import Controller
+
 import os
 
 import logging
@@ -16,6 +18,7 @@ Bot_token = os.getenv("Bot_token")
 
 client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
+cont = Controller("/start")
 
 @client.on(events.NewMessage(pattern="/start"))
 async def start(event):
@@ -62,6 +65,16 @@ async def callback(event):
     
         await event.respond("شما روی دوکمه اول کلیک کردید")
         
+        keyBoard = [
+            [
+                Button.inline("گروه میخوام", b"8"),
+                Button.inline("گروه دارم", b"9")
+            ]
+        ]
+            
+        await client.send_message(event.chat_id, "گروه داری یا گروه میخوای\nاگه هرکدوم هست که بزن بریم🔥", buttons=keyBoard)
+            
+        
     elif event.data == b'2':
         
         await event.respond("شما روی دوکمه دوم کلیک کردید")
@@ -89,7 +102,15 @@ async def callback(event):
             
             User = event.sender
             
-            await client.send_message('@Alirez0K', f"Issue > {event.message.message}\n\nFrom > {User.username}")
+            if User.username != None:
+                
+                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \nFrom > {User.username}")
+            
+                await client.send_message(User.username, "پیام شما به ادمین ارسال شد")
+                
+            elif User.username == None:
+                
+                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \n\nFrom > User Dosent have username")
             
             await event.respond("خیلی خوشحالیم که مشکل رو به ما اطلاع دادید،\nدر چند ساعت آینده برسی و رفع خواهد شد.🫡🙏🏻")
         
@@ -103,6 +124,24 @@ async def callback(event):
             print(event.message.message)
             
             await client.send_message('@Alirez0K', event.message.message)
+            
+    elif event.data == b"8":
+        
+        id = cont.Start(0)
+        
+        await event.respond(f"آیدی گروه شما: {id[0]}")
+        
+    elif event.data == b"9":
+        
+        await event.respond("آیدی گروه خودتون رو وارد کنید:")
+        
+        @client.on(events.NewMessage)
+        
+        async def handler(event):
+            
+            print(event.message.message)
+        
+            cont.Start(1, G = event.message.message)
             
         
 client.start()

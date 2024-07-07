@@ -80,7 +80,7 @@ class Models:
         
         myDB.commit()
         
-        return hashValue
+        return [hashValue, groupName]
     
     def UserCreation(self, name, username, groupID):
         
