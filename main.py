@@ -59,7 +59,13 @@ async def help(event):
     
 async def sendMessageToAll(userID,text, nickname = None):
     
-    await client.send_message(userID, text)
+    if nickname == None or nickname == "":
+    
+        await client.send_message(userID, text)
+        
+    elif nickname == "narrator":
+        
+        await client.send_message(userID, "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃")
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -161,15 +167,11 @@ async def callback(event):
             
             if usersCount == 6:
                 
-               check = cont.ChooseNarrator(groupID) 
-            
-            if check:
-                    
+                check = cont.ChooseNarrator(groupID) 
+    
                 for user in users:
                     
-                    await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥")
-                
-            
+                    await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥",user[4])
                 
 client.start()
 
