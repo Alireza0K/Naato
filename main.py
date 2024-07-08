@@ -1,11 +1,7 @@
 from telethon.sync import TelegramClient, events, Button
-
 from dotenv import load_dotenv
-
 from Controller import Controller
-
 import os
-
 import logging
 
 load_dotenv()
@@ -60,6 +56,10 @@ async def help(event):
     ]
     
     await client.send_message(event.chat_id, "من میتونم کمکت کنم😍", buttons=keyboard)
+    
+async def sendMessageToAll(userID,text, nickname = None):
+    
+    await client.send_message(userID, text)
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -100,8 +100,6 @@ async def callback(event):
         @client.on(events.NewMessage)
         async def handler(event):
             
-            print(event.message.message)
-            
             User = event.sender
             
             if User.username != None:
@@ -123,8 +121,6 @@ async def callback(event):
         @client.on(events.NewMessage)
         async def handler(event):
             
-            print(event.message.message)
-            
             await client.send_message('@Alirez0K', event.message.message)
             
     elif event.data == b"8":
@@ -133,7 +129,7 @@ async def callback(event):
         
         regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.username)
         
-        await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه {id[1]} شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: {id[0]}", parse_mode="html")
+        await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
     elif event.data == b"9":
         
@@ -143,15 +139,37 @@ async def callback(event):
         
         async def handler(event):
             
+            check = False
+            
             groupinfo = cont.GetGroupInformation(event.message.message)
             
             groupName = groupinfo[0][0][2]
+            
+            groupID = groupinfo[0][0][1]
         
             regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
             
             if regesterTheUser:
                 
                 await event.respond(f"شما با موافقیت عضو گروه {groupName}")
+            
+            usersinfo = cont.GetUsersId(groupID)
+            
+            users = usersinfo[0]
+            
+            usersCount = usersinfo[1]
+            
+            if usersCount == 6:
+                
+               check = cont.ChooseNarrator(groupID) 
+            
+            if check:
+                    
+                for user in users:
+                    
+                    await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥")
+                
+            
                 
 client.start()
 

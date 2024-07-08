@@ -64,9 +64,25 @@ class Controller:
         
         return True
     
+    def GetUsersId(self, group):
+        
+        users = model.GetUsersByGroup(groupID=group)
+        
+        return [users, len(users)]
+    
     def ChooseNarrator(self, group):
         
-        model.ChangeUserNickname(group[0], "narrator")
+        check = False
+        
+        gpInfo = model.GetGroupInfo(group)
+        
+        if gpInfo[0][0][-1] == 0:  
+            
+            check = True
+        
+            model.ChangeUserNickname(group, "narrator")
+        
+        return check
     
     def GameFirstSection(self, users, group):
         
