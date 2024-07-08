@@ -80,7 +80,7 @@ class Models:
         
         myDB.commit()
         
-        return hashValue
+        return [hashValue, groupName]
     
     def UserCreation(self, name, username, groupID):
         
@@ -130,6 +130,20 @@ class Models:
         
         return check
 
+    def GetGroupInfo(self, groupID):
+        
+        check = False
+        
+        value = (groupID)
+        
+        sql = ("SELECT * FROM `groups` WHERE group_Hash = '%s'" % (value))
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return [result]
+
     def TrueStatus(self, groupID):
         
         sql = "select name from users where groupID = '%s'" % (groupID)
@@ -172,7 +186,7 @@ class Models:
         
         myDB.commit()
         
-        return (firstUser[1], "is", nickname)
+        return [firstUser[1], "is", nickname]
     
     def ChooseNaato(self, groupID):
         
