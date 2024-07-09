@@ -8,6 +8,8 @@ import random
 import os
 import time
 
+import mysql.connector.errorcode
+
 load_dotenv()
 
 DB_info = {
@@ -86,6 +88,8 @@ class Models:
         
         check = self.GetGroupStatus(groupID)
         
+        situation = True
+        
         self.TrueStatus(groupID)
         
         if check != True:
@@ -100,11 +104,23 @@ class Models:
         
         values = (name, username, userHash, "", groupID, points)
         
-        mycursor.execute(sql, values)
+        try:
+            
+            mycursor.execute(sql, values)
+            
+            myDB.commit()
+            
+        except mysql.connector.Error as err:
+            
+            print(err)
+            
+            if err.errno == mysql.connector.errorcode.ER_DUP_ENTRY:
+                
+                situation = False
+                
+                change = self.ChangeUserGroup(userHash, groupID)
         
-        myDB.commit()
-        
-        return userHash
+        return [userHash, situation]
     
     def GetGroupStatus(self, groupID):
         
@@ -187,6 +203,34 @@ class Models:
         myDB.commit()
         
         return [firstUser[1], "is", nickname]
+    
+    def ChangeUserGroup(self, userHash, newGroup):
+        
+        try:
+
+            sql = "update `users` set groupID = '%s' where user_Hash = '%s'" % (newGroup, userHash)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+        except mysql.connector.Error as err:
+            
+            print(err)
+        
+        result = self.GetUserByHash(userHash)
+        
+        return result
+    
+    def GetUserByHash(self, userHash):
+        
+        sql = "select * from `users` where user_Hash = '%s'" % (userHash)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
     
     def ChooseNaato(self, groupID):
         
