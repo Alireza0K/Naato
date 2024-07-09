@@ -48,9 +48,21 @@ class Controller:
     
     def GetGroupInformation(self,GroupID):
         
-        info = model.GetGroupInfo(GroupID)
+        print(len(GroupID))
         
-        return info
+        if GroupID != None and len(GroupID) > 6:
+        
+            info = model.GetGroupInfo(GroupID)
+            
+            print("from Controller")
+            
+            return info
+        
+        else:
+            
+            print(GroupID)
+            
+            return None
     
     def GetFactsFromEachUser(self, user):
         

@@ -135,44 +135,55 @@ async def callback(event):
         
         regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.username)
         
-        await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
+        if regesterTheUser[1] == False:
+            
+            await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
+        
+        elif regesterTheUser[1] == True:
+            
+            await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
     elif event.data == b"9":
         
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
         
         @client.on(events.NewMessage)
-        
         async def handler(event):
             
-            check = False
+            User = event.sender
             
+            print(User.username)
+                
             groupinfo = cont.GetGroupInformation(event.message.message)
-            
-            groupName = groupinfo[0][0][2]
-            
-            groupID = groupinfo[0][0][1]
-        
-            regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
-            
-            if regesterTheUser:
                 
-                await event.respond(f"شما با موافقیت عضو گروه {groupName}")
-            
-            usersinfo = cont.GetUsersId(groupID)
-            
-            users = usersinfo[0]
-            
-            usersCount = usersinfo[1]
-            
-            if usersCount == 6:
-                
-                check = cont.ChooseNarrator(groupID) 
-    
-                for user in users:
+            if groupinfo != None:
                     
-                    await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥",user[4])
+                groupName = groupinfo[0][0][2]
                 
+                groupID = groupinfo[0][0][1]
+                    
+                print(groupID)
+                
+                regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
+                    
+                if regesterTheUser:
+                    
+                    await event.respond(f"شما با موافقیت عضو گروه {groupName}")
+                
+                usersinfo = cont.GetUsersId(groupID)
+                
+                users = usersinfo[0]
+                
+                usersCount = usersinfo[1]
+                
+                if usersCount == 6:
+                    
+                    check = cont.ChooseNarrator(groupID) 
+        
+                    for user in users:
+                        
+                        await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥",user[4])
+                    
 client.start()
 
 client.run_until_disconnected()
