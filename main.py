@@ -70,8 +70,6 @@ async def sendMessageToAll(userID,text, nickname = None):
 @client.on(events.CallbackQuery())
 async def callback(event):
     if event.data == b'1':
-    
-        await event.respond("شما روی دوکمه اول کلیک کردید")
         
         keyBoard = [
             [
