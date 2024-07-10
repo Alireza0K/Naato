@@ -96,6 +96,12 @@ class Controller:
         
         return check
     
+    def ChooseNaato(self, group):
+        
+        naato = model.ChooseNaato(group)
+        
+        return naato
+    
     def GameFirstSection(self, users, group):
         
         for user in users:

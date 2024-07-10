@@ -248,7 +248,9 @@ class Models:
         
         naatoHash = result[choose][3]
         
-        sql = "update `users` set nickname = '%s' where id = %s" % ("Naato", user)
+        sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
+        
+        print(sql, usersLen, choose, user, naatoHash)
         
         mycursor.execute(sql)
         
