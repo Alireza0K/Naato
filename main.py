@@ -57,15 +57,21 @@ async def help(event):
     
     await client.send_message(event.chat_id, "من میتونم کمکت کنم😍", buttons=keyboard)
     
-async def sendMessageToAll(userID,text, nickname = None):
+async def sendMessageToAll(users):
     
-    if nickname == None or nickname == "":
+    print(users)
     
-        await client.send_message(userID, text)
+    for user in users:
         
-    elif nickname == "narrator":
+        print(user)
+    
+        if user[4] == None or user[4] == "":
         
-        await client.send_message(userID, "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃")
+            await client.send_message(user[2], "تمام اعضای تیم جمع شدن و میخوایم که بازی رو شروع کنیم.")
+            
+        elif user[4] == "narrator":
+            
+            await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃")
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -159,8 +165,6 @@ async def callback(event):
                 groupName = groupinfo[0][0][2]
                 
                 groupID = groupinfo[0][0][1]
-                    
-                print(groupID)
                 
                 regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
                     
@@ -174,13 +178,13 @@ async def callback(event):
                 
                 usersCount = usersinfo[1]
                 
-                if usersCount == 6:
+                if usersCount == 3:
                     
                     check = cont.ChooseNarrator(groupID) 
-        
-                    for user in users:
+                    
+                    if check:
                         
-                        await sendMessageToAll(user[2], "گروه شما تکمیل شد.✌️\n\n راوی بازی انتخاب شده و بازی آغاز میشه.🔥",user[4])
+                        await sendMessageToAll(users)
                     
 client.start()
 

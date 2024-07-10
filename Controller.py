@@ -88,7 +88,7 @@ class Controller:
         
         gpInfo = model.GetGroupInfo(group)
         
-        if gpInfo[0][0][-1] == 0:  
+        if gpInfo[0][0][-1] == 1|0:  
             
             check = True
         
