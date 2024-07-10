@@ -274,25 +274,27 @@ class Models:
         
         sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`) values (NULL, %s, '%s', '%s')" % (question_Hash, groupID, question)
         
+        print(sql)
+        
         mycursor.execute(sql)
         
         myDB.commit()
         
-        for count in range(0,4):
+        # for count in range(0,4):
             
-            answer = input(str(count+1) + ". enter answer: ")
+        #     answer = input(str(count+1) + ". enter answer: ")
         
-            answer = fake.sentence()
+        #     answer = fake.sentence()
             
-            check = input("if its true enter 1 or not 0:")
+        #     check = input("if its true enter 1 or not 0:")
             
-            check = 0
+        #     check = 0
             
-            if count == 3:
+        #     if count == 3:
                 
-                check = 1
+        #         check = 1
             
-            self.GetAnswers(question_Hash, answer, check)
+        #     self.GetAnswers(question_Hash, answer, check)
         
         return True
     

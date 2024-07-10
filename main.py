@@ -68,10 +68,25 @@ async def sendMessageToAll(users):
         elif user[4] == "narrator":
             
             await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃")
+            
+            for count in range(0,4):
+        
+                await client.send_message(user[2], message=str(count+1) + ".سوال را وارد کنید:")
+                
+                await QANarrator(user, groupId=user[5])
 
         elif user[4] == "Naato":
             
             await client.send_message(user[2], "شما ناتو این بازی هستید.🎭")
+
+async def QANarrator(user, groupId):
+        
+        @client.on(events.NewMessage)
+        async def handler(event):
+            
+            print(event.message.message)
+            
+            cont.QandANarator(userNickName=user[4], groupID=groupId, Q=event.message.message, A="this is a test")
 
 @client.on(events.CallbackQuery())
 async def callback(event):

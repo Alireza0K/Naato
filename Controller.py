@@ -102,6 +102,16 @@ class Controller:
         
         return naato
     
+    def QandANarator(self,userNickName, groupID, Q, A):
+        
+        if userNickName == "narrator":
+                
+            for questions in Q:
+                
+                question = questions
+                    
+                model.GetQuestions(groupID, question) 
+    
     def GameFirstSection(self, users, group):
         
         for user in users:
