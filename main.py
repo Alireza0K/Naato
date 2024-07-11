@@ -208,7 +208,15 @@ async def callback(event):
             
             questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[question], A="Test magic")
             
-            await event.respond("چهار جواب سوال را با `/A` وارد کنید.")
+            if questions[0]:
+                
+                await client.send_message(event.chat_id, 
+                                          "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1``` \nجواب درست را با `جواب = 1` نشان میدهیم",
+                                          parse_mode="markdown")
+            
+            else:
+                
+                await event.respond("شما چهار سوال وارد کردید.")
             
             @client.on(events.NewMessage(pattern="/A"))
             async def A(event):
@@ -217,6 +225,26 @@ async def callback(event):
             
                 answers = answers.replace("/A", "")
                 
+                edit = answers.split("\n")
+                
+                if " " in edit:
+                    
+                    edit.remove(" ")
+                    
+                if "" in edit:
+                    
+                    edit.remove("")
+                    
+                for i in range(0,len(edit)):
+                    
+                    ed = edit[i]
+                    
+                    ed = ed.split("=")
+                    
+                    edit[i] = ed
+                    
+                answers = edit
+
                 switchB = [
                         [
                         Button.inline("این جواب غلطه!", b"0"),
@@ -224,26 +252,19 @@ async def callback(event):
                         ]
                     ]
                 
-                await client.send_message(event.chat_id, "جواب شما ثبت شد.\n\n درست یا غلط؟", buttons=switchB)
-                
-                @client.on(events.CallbackQuery())
-                async def callback(event):
+                for answer in answers:
                     
-                    if event.data == b"0":
+                    print(answer)
+                    
+                    if len(answer) == 2:
                         
-                        print("False")
+                        cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
                         
-                    elif event.data == b"12":
+                    elif len(answer) == 1:
                         
-                        print("True")
-                
-            if questions[0]:
-                
-                await event.respond("سوال ثبت شد.")
-            
-            else:
-                
-                await event.respond("شما چهار سوال وارد کردید.")
+                        cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
+                        
+                await event.respond("جواب شما ثبت شد")
                     
 client.start()
 
