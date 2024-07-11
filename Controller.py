@@ -48,19 +48,13 @@ class Controller:
     
     def GetGroupInformation(self,GroupID):
         
-        print(len(GroupID))
-        
         if GroupID != None and len(GroupID) > 6:
         
             info = model.GetGroupInfo(GroupID)
             
-            print("from Controller")
-            
             return info
         
         else:
-            
-            print(GroupID)
             
             return None
     
@@ -88,13 +82,31 @@ class Controller:
         
         gpInfo = model.GetGroupInfo(group)
         
-        if gpInfo[0][0][-1] == 0:  
+        if gpInfo[0][0][-1] == 1|0:  
             
             check = True
         
             model.ChangeUserNickname(group, "narrator")
         
         return check
+    
+    def ChooseNaato(self, group):
+        
+        naato = model.ChooseNaato(group)
+        
+        return naato
+    
+    def QandANarator(self,userNickName, groupID, Q, A):
+        
+        if userNickName == "narrator":
+                
+            for questions in Q:
+                
+                question = questions
+                    
+                qa = model.GetQuestions(groupID, question) 
+                
+        return qa
     
     def GameFirstSection(self, users, group):
         
