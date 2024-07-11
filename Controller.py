@@ -48,19 +48,13 @@ class Controller:
     
     def GetGroupInformation(self,GroupID):
         
-        print(len(GroupID))
-        
         if GroupID != None and len(GroupID) > 6:
         
             info = model.GetGroupInfo(GroupID)
             
-            print("from Controller")
-            
             return info
         
         else:
-            
-            print(GroupID)
             
             return None
     
@@ -110,7 +104,9 @@ class Controller:
                 
                 question = questions
                     
-                model.GetQuestions(groupID, question) 
+                qa = model.GetQuestions(groupID, question) 
+                
+        return qa
     
     def GameFirstSection(self, users, group):
         

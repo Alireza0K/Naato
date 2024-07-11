@@ -250,8 +250,6 @@ class Models:
         
         sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
         
-        print(sql, usersLen, choose, user, naatoHash)
-        
         mycursor.execute(sql)
         
         myDB.commit()        
@@ -270,33 +268,37 @@ class Models:
     
     def GetQuestions(self, groupID, question):
         
-        question_Hash = hash(question + str(datetime.datetime.now()))
+        check = self.CheckQuestions(groupID=groupID)
         
-        sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`) values (NULL, %s, '%s', '%s')" % (question_Hash, groupID, question)
+        question_Hash = None
         
-        print(sql)
+        if check:
+            
+            question_Hash = hash(question + str(datetime.datetime.now()))
+            
+            sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`) values (NULL, %s, '%s', '%s')" % (question_Hash, groupID, question)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+        
+        return [check, question_Hash]
+    
+    def CheckQuestions(self, groupID):
+        
+        check = True
+        
+        sql = "select * from questions where groupID = '%s'" % (groupID)
         
         mycursor.execute(sql)
         
-        myDB.commit()
+        questions = mycursor.fetchall()
         
-        # for count in range(0,4):
+        if len(questions) >= 4:
             
-        #     answer = input(str(count+1) + ". enter answer: ")
-        
-        #     answer = fake.sentence()
+            check = False
             
-        #     check = input("if its true enter 1 or not 0:")
-            
-        #     check = 0
-            
-        #     if count == 3:
-                
-        #         check = 1
-            
-        #     self.GetAnswers(question_Hash, answer, check)
-        
-        return True
+        return check 
     
     def GetAnswers(self, question_Hash, answers, check):
         

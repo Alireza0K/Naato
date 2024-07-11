@@ -36,8 +36,6 @@ async def start(event):
     global User
     
     User = event.sender
-    
-    print(f"user-ID -> {User.id} username -> {User.username}")
 
     await client.send_message(event.chat_id
                               ,f"سلام {User.first_name} \n\nبه بازی ناتو خوش اومدی🥳  \nتوی این بازی کلیییی قراره بهت خوش بگذره.  \nبیا باهم گذینه های پایین رو نگاه کنیم 👀 \n\n⚠️اگه نیاز به کمک داشتی |کمک لازم دارم| رو بزن"
@@ -67,26 +65,25 @@ async def sendMessageToAll(users):
             
         elif user[4] == "narrator":
             
-            await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃")
+            keyboard= [
+                [
+                    Button.inline("وارد کردن سوال ها.", b"10")
+                ]
+            ]
             
-            for count in range(0,4):
-        
-                await client.send_message(user[2], message=str(count+1) + ".سوال را وارد کنید:")
-                
-                await QANarrator(user, groupId=user[5])
-
+            global nickname
+            
+            global groupID
+            
+            nickname = user[4]
+            
+            groupID = user[5]
+            
+            await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
+            
         elif user[4] == "Naato":
             
             await client.send_message(user[2], "شما ناتو این بازی هستید.🎭")
-
-async def QANarrator(user, groupId):
-        
-        @client.on(events.NewMessage)
-        async def handler(event):
-            
-            print(event.message.message)
-            
-            cont.QandANarator(userNickName=user[4], groupID=groupId, Q=event.message.message, A="this is a test")
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -100,8 +97,7 @@ async def callback(event):
         ]
             
         await client.send_message(event.chat_id, "گروه داری یا گروه میخوای\nاگه هرکدوم هست که بزن بریم🔥", buttons=keyBoard)
-            
-        
+
     elif event.data == b'2':
         
         await event.respond("شما روی دوکمه دوم کلیک کردید")
@@ -170,8 +166,6 @@ async def callback(event):
         async def handler(event):
             
             User = event.sender
-            
-            print(User.username)
                 
             groupinfo = cont.GetGroupInformation(event.message.message)
                 
@@ -197,11 +191,26 @@ async def callback(event):
                     
                     check = cont.ChooseNarrator(groupID) 
                     
-                    naato = cont.ChooseNaato(groupID)
-                    
                     if check:
                         
                         await sendMessageToAll(users)
+                        
+    elif event.data == b"10":
+        
+        await event.respond("سوال هارا دونه به دونه وارد کنید:")
+        
+        @client.on(events.NewMessage)
+        async def handler(event):
+            
+            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[event.message.message], A="Test magic")
+
+            if questions[0]:
+                
+                await event.respond("سوال ثبت شد.")
+            
+            else:
+                
+                await event.respond("شما چهار سوال وارد کردید.")
                     
 client.start()
 
