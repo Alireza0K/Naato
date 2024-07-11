@@ -108,6 +108,12 @@ class Controller:
                 
         return qa
     
+    def AnswersNarrator(self, question_Hash, answers, check):
+        
+        model.GetAnswers(question_Hash=question_Hash, answers=answers, check=check)
+        
+        return True
+    
     def GameFirstSection(self, users, group):
         
         for user in users:

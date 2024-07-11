@@ -197,12 +197,29 @@ async def callback(event):
                         
     elif event.data == b"10":
         
-        await event.respond("سوال هارا دونه به دونه وارد کنید:")
+        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:")
         
-        @client.on(events.NewMessage)
-        async def handler(event):
+        @client.on(events.NewMessage(pattern="/Q"))
+        async def Q(event):
             
-            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[event.message.message], A="Test magic")
+            question = str(event.message.message)
+            
+            question = question.replace("/Q", "")
+            
+            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[question], A="Test magic")
+            
+            await event.respond("چهار جواب سوال را با `/A` وارد کنید.")
+            
+            @client.on(events.NewMessage(pattern="/A"))
+            async def A(event):
+                
+                answers = str(event.message.message)
+            
+                answers = answers.replace("/A", "")
+                
+                await event.respond("جواب ثبت شد.")
+                
+                print(answers)
 
             if questions[0]:
                 
