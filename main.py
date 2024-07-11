@@ -217,10 +217,26 @@ async def callback(event):
             
                 answers = answers.replace("/A", "")
                 
-                await event.respond("جواب ثبت شد.")
+                switchB = [
+                        [
+                        Button.inline("این جواب غلطه!", b"0"),
+                        Button.inline("این جواب درسته!", b"12")
+                        ]
+                    ]
                 
-                print(answers)
-
+                await client.send_message(event.chat_id, "جواب شما ثبت شد.\n\n درست یا غلط؟", buttons=switchB)
+                
+                @client.on(events.CallbackQuery())
+                async def callback(event):
+                    
+                    if event.data == b"0":
+                        
+                        print("False")
+                        
+                    elif event.data == b"12":
+                        
+                        print("True")
+                
             if questions[0]:
                 
                 await event.respond("سوال ثبت شد.")
