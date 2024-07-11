@@ -294,7 +294,7 @@ class Models:
         
         questions = mycursor.fetchall()
         
-        if len(questions) >= 10:
+        if len(questions) >= 4:
             
             check = False
             
@@ -308,8 +308,6 @@ class Models:
         
             sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
 
-            print(sql)
-            
             try:
                 mycursor.execute(sql)
                 

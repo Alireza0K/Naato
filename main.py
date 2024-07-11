@@ -258,13 +258,19 @@ async def callback(event):
                     
                     if len(answer) == 2:
                         
-                        cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
+                        applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
                         
                     elif len(answer) == 1:
                         
-                        cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
+                        applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
                         
-                await event.respond("جواب شما ثبت شد")
+                if applyAnswers:    
+        
+                    await event.respond("جواب شما ثبت شد.")
+                
+                else:
+                    
+                    await event.respond("چهار جواب شما ثبت شده.")
                     
 client.start()
 
