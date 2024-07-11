@@ -197,13 +197,46 @@ async def callback(event):
                         
     elif event.data == b"10":
         
-        await event.respond("سوال هارا دونه به دونه وارد کنید:")
+        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:")
         
-        @client.on(events.NewMessage)
-        async def handler(event):
+        @client.on(events.NewMessage(pattern="/Q"))
+        async def Q(event):
             
-            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[event.message.message], A="Test magic")
-
+            question = str(event.message.message)
+            
+            question = question.replace("/Q", "")
+            
+            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[question], A="Test magic")
+            
+            await event.respond("چهار جواب سوال را با `/A` وارد کنید.")
+            
+            @client.on(events.NewMessage(pattern="/A"))
+            async def A(event):
+                
+                answers = str(event.message.message)
+            
+                answers = answers.replace("/A", "")
+                
+                switchB = [
+                        [
+                        Button.inline("این جواب غلطه!", b"0"),
+                        Button.inline("این جواب درسته!", b"12")
+                        ]
+                    ]
+                
+                await client.send_message(event.chat_id, "جواب شما ثبت شد.\n\n درست یا غلط؟", buttons=switchB)
+                
+                @client.on(events.CallbackQuery())
+                async def callback(event):
+                    
+                    if event.data == b"0":
+                        
+                        print("False")
+                        
+                    elif event.data == b"12":
+                        
+                        print("True")
+                
             if questions[0]:
                 
                 await event.respond("سوال ثبت شد.")
