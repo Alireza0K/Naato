@@ -59,39 +59,49 @@ async def help(event):
 async def F(event):
     
     user = event.sender.username
-    
+        
     user = cont.GetUserByUName(user)
+    
+    check = cont.checkQ(user[0][5])
+    
+    print(check)
+    
+    if check == False:
 
-    facts = str(event.message.message)
-                
-    facts = facts.replace("/F", "")
-                
-    edit = facts.split("\n")
-                
-    if " " in edit:
+        facts = str(event.message.message)
                     
-        edit.remove(" ")
+        facts = facts.replace("/F", "")
                     
-    if "" in edit:
+        edit = facts.split("\n")
                     
-        edit.remove("")
-                    
-    facts = edit
+        if " " in edit:
+                        
+            edit.remove(" ")
+                        
+        if "" in edit:
+                        
+            edit.remove("")
+                        
+        facts = edit
 
-    if len(facts) > 5:
-                    
-        await event.respond("تعداد فکت های شما بیشتر از حد مجاز بود.😵‍💫")
-                    
-    elif len(facts) == 5:
-                    
-        await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
-                    
-        ApplyFacts = cont.GetFactsFromEachUser(user[0][3], facts=facts)
-                    
-    elif len(facts) < 5:
-                    
-        await event.respond("تعداد فکت های شما از مجاز کمتر بود لطفا دوباره وارد کنید.😵‍💫")
-                    
+        if len(facts) > 5:
+                        
+            await event.respond("تعداد فکت های شما بیشتر از حد مجاز بود.😵‍💫")
+                        
+        elif len(facts) == 5:
+                        
+            await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
+                        
+            ApplyFacts = cont.GetFactsFromEachUser(user[0][3], facts=facts)
+                        
+        elif len(facts) < 5:
+                        
+            await event.respond("تعداد فکت های شما از مجاز کمتر بود لطفا دوباره وارد کنید.😵‍💫")
+            
+    else:
+        
+        await event.respond("⚠️هنوز راوی سوالات رو وارد نکرده\n\nیکم صبر کن.🙏🏻")
+                        
 async def sendMessageToAll(users):
     
     for user in users:
@@ -107,14 +117,6 @@ async def sendMessageToAll(users):
                     Button.inline("وارد کردن سوال ها.", b"10")
                 ]
             ]
-            
-            global nickname
-            
-            global groupID
-            
-            nickname = user[4]
-            
-            groupID = user[5]
             
             await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
             
@@ -230,6 +232,8 @@ async def callback(event):
                     
                     if check:
                         
+                        naato = cont.ChooseNaato(groupID)
+                        
                         await sendMessageToAll(users)
                         
     elif event.data == b"10":
@@ -239,11 +243,19 @@ async def callback(event):
         @client.on(events.NewMessage(pattern="/Q"))
         async def Q(event):
             
+            user = event.sender.username
+            
+            user = cont.GetUserByUName(user)
+            
+            usernickname = user[0][4]
+            
+            groupID = user[0][5]
+            
             question = str(event.message.message)
             
             question = question.replace("/Q", "")
             
-            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[question], A="Test magic")
+            questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=[question], A="Test magic")
             
             if questions[0]:
                 
