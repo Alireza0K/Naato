@@ -232,6 +232,16 @@ class Models:
         
         return result
     
+    def GetUserByUsername(self, username):
+        
+        sql = "select * from `users` where username = '%s'" % (username)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
+    
     def ChooseNaato(self, groupID):
         
         sql_select = "SELECT * FROM `users` WHERE groupID = '%s' and nickname <> 'narrator';" % (groupID)
@@ -258,13 +268,41 @@ class Models:
     
     def GetFacts(self, userID, fact):
         
-        sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
+        print(userID)
         
-        mycursor.execute(sql)
+        check = self.CheckFacts(userID)
         
-        myDB.commit()
+        if check:
         
-        return True
+            sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+        return check
+    
+    def CheckFacts(self,userID):
+        
+        check = True
+        
+        sql = "select * from facts where userID = '%s'" % (userID)
+        
+        try:
+        
+            mycursor.execute(sql)
+            
+            facts = mycursor.fetchall()
+            
+        except mysql.connector.Error as err:
+            
+            print(err)
+        
+        if len(facts) >= 5:
+            
+            check = False
+            
+        return check 
     
     def GetQuestions(self, groupID, question):
         

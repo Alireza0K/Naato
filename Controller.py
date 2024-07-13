@@ -46,6 +46,12 @@ class Controller:
         
         return user
     
+    def GetUserByUName(self, username):
+        
+        user = model.GetUserByUsername(username)
+        
+        return user
+    
     def GetGroupInformation(self,GroupID):
         
         if GroupID != None and len(GroupID) > 6:
@@ -58,17 +64,15 @@ class Controller:
             
             return None
     
-    def GetFactsFromEachUser(self, user):
+    def GetFactsFromEachUser(self, user, facts):
         
-        for x in range(0,5):
+        check = True
         
-            fact = input(str(x+1) + ". enter the fact: ")
-                        
-            fact = fake.paragraph()
+        for fact in facts:
                 
-            model.GetFacts(user, fact)
+            check = model.GetFacts(user, fact)
         
-        return True
+        return check
     
     def GetUsersId(self, group):
         

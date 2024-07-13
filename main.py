@@ -55,13 +55,50 @@ async def help(event):
     
     await client.send_message(event.chat_id, "من میتونم کمکت کنم😍", buttons=keyboard)
     
+@client.on(events.NewMessage(pattern="/F"))
+async def F(event):
+    
+    user = event.sender.username
+    
+    user = cont.GetUserByUName(user)
+
+    facts = str(event.message.message)
+                
+    facts = facts.replace("/F", "")
+                
+    edit = facts.split("\n")
+                
+    if " " in edit:
+                    
+        edit.remove(" ")
+                    
+    if "" in edit:
+                    
+        edit.remove("")
+                    
+    facts = edit
+
+    if len(facts) > 5:
+                    
+        await event.respond("تعداد فکت های شما بیشتر از حد مجاز بود.😵‍💫")
+                    
+    elif len(facts) == 5:
+                    
+        await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
+                    
+        ApplyFacts = cont.GetFactsFromEachUser(user[0][3], facts=facts)
+                    
+    elif len(facts) < 5:
+                    
+        await event.respond("تعداد فکت های شما از مجاز کمتر بود لطفا دوباره وارد کنید.😵‍💫")
+                    
 async def sendMessageToAll(users):
     
     for user in users:
     
-        if user[4] == None or user[4] == "":
+        if user[4] == None or user[4] != "narrator":
         
-            await client.send_message(user[2], "تمام اعضای تیم جمع شدن و میخوایم که بازی رو شروع کنیم.")
+            await client.send_message(user[2], "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنی.😎\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F\nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nخوب فکت وارد کنی ها😁", parse_mode="markdown")
             
         elif user[4] == "narrator":
             
