@@ -118,6 +118,12 @@ class Controller:
         
         return True
     
+    def checkQ(self,groupID):
+        
+        check = model.CheckQuestions(groupID)
+        
+        return check
+    
     def GameFirstSection(self, users, group):
         
         for user in users:
