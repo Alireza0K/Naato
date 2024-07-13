@@ -118,14 +118,6 @@ async def sendMessageToAll(users):
                 ]
             ]
             
-            global nickname
-            
-            global groupID
-            
-            nickname = user[4]
-            
-            groupID = user[5]
-            
             await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
             
         elif user[4] == "Naato":
@@ -251,11 +243,19 @@ async def callback(event):
         @client.on(events.NewMessage(pattern="/Q"))
         async def Q(event):
             
+            user = event.sender.username
+            
+            user = cont.GetUserByUName(user)
+            
+            usernickname = user[0][4]
+            
+            groupID = user[0][5]
+            
             question = str(event.message.message)
             
             question = question.replace("/Q", "")
             
-            questions = cont.QandANarator(userNickName=nickname, groupID=groupID, Q=[question], A="Test magic")
+            questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=[question], A="Test magic")
             
             if questions[0]:
                 
