@@ -302,13 +302,38 @@ class Models:
     
     def GetAnswers(self, question_Hash, answers, check):
         
-        sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
+        checkA = self.CheckAnswers(question_Hash)
+        
+        if checkA:
+        
+            sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
+
+            try:
+                mycursor.execute(sql)
+                
+                myDB.commit()
+                
+            except mysql.connector.Error as err:
+                
+                print(err)
+        
+        return checkA
+    
+    def CheckAnswers(self, question_Hash):
+        
+        check = True
+        
+        sql = "select * from Answers where questionID = '%s'" % (question_Hash)
         
         mycursor.execute(sql)
         
-        myDB.commit()
+        answers = mycursor.fetchall()
         
-        return True
+        if len(answers) >= 4:
+            
+            check = False
+            
+        return check 
     
     def ShowQuestionsAndAnswers(self, groupID):
         
