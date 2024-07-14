@@ -64,8 +64,6 @@ async def F(event):
     
     check = cont.checkQ(user[0][5])
     
-    print(check)
-    
     if check == False:
 
         facts = str(event.message.message)
@@ -100,7 +98,29 @@ async def F(event):
             
         if user[0][4] == "Naato":
             
-            await client.send_message(event.chat_id,"تبریک میگم شما** ناتو** این بازی هستید.🎭", parse_mode="markdown")
+            await client.send_message(event.chat_id,"تبریک میگم شما** -ناتو-** این بازی هستید.🎭", parse_mode="markdown")
+            
+            qaA = cont.ShowQandA(user[0][5])
+            
+            for questionAndAnswers in qaA:
+                
+                textMessage = []
+                
+                textMessage.append([f"سوال **{str(questionAndAnswers[0])}**⚠️\n"])
+                
+                for answers in questionAndAnswers[1]:
+                    
+                    if answers[1] == 0:
+ 
+                        textMessage.append([f"جواب **{str(answers[0])}** ❌\n"])
+                        
+                    elif answers[1] == 1:
+
+                        textMessage.append([f"جواب درست **{str(answers[0])}** ✅\n"])
+                
+                message = f"{textMessage[0][0]}\n{textMessage[1][0]}\n{textMessage[2][0]}\n{textMessage[3][0]}\n{textMessage[4][0]}\n"
+                
+                await client.send_message(event.chat_id, message)
             
     else:
         
@@ -296,7 +316,6 @@ async def callback(event):
                 
                 for answer in answers:
                     
-                    print(answer)
                     
                     if len(answer) == 2:
                         
