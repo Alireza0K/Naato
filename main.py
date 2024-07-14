@@ -98,6 +98,10 @@ async def F(event):
                         
             await event.respond("تعداد فکت های شما از مجاز کمتر بود لطفا دوباره وارد کنید.😵‍💫")
             
+        if user[0][4] == "Naato":
+            
+            await client.send_message(event.chat_id,"تبریک میگم شما** ناتو** این بازی هستید.🎭", parse_mode="markdown")
+            
     else:
         
         await event.respond("⚠️هنوز راوی سوالات رو وارد نکرده\n\nیکم صبر کن.🙏🏻")
@@ -119,10 +123,6 @@ async def sendMessageToAll(users):
             ]
             
             await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
-            
-        elif user[4] == "Naato":
-            
-            await client.send_message(user[2], "شما ناتو این بازی هستید.🎭")
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -293,13 +293,6 @@ async def callback(event):
                     edit[i] = ed
                     
                 answers = edit
-
-                switchB = [
-                        [
-                        Button.inline("این جواب غلطه!", b"0"),
-                        Button.inline("این جواب درسته!", b"12")
-                        ]
-                    ]
                 
                 for answer in answers:
                     
