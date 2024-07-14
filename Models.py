@@ -268,8 +268,6 @@ class Models:
     
     def GetFacts(self, userID, fact):
         
-        print(userID)
-        
         check = self.CheckFacts(userID)
         
         if check:
@@ -375,6 +373,10 @@ class Models:
     
     def ShowQuestionsAndAnswers(self, groupID):
         
+        questionsList = []
+        
+        QandAList = []
+        
         sql = "select * from questions where groupID = '%s'" % (groupID)
         
         mycursor.execute(sql)
@@ -383,25 +385,19 @@ class Models:
         
         for question in questions:
             
-            print("\nQuestion is: ▼")
-            
-            print(question[3], "\n")
+            answersList = []
+
+            questionsList.append(question[3]) 
             
             answers = self.ShowAnswers(question[1])
-            
-            print("Answer is: ▼")
-            
-            for answer in answers:
-                if answer[3] == 1:
-                    
-                    print(answer[2], "! ✅ !", "\n")
-                    
-                else:
-                    
-                    print(answer[2], "\n")
-                    
-        
-        return True
+
+            for counter in range(0,len(answers)):
+
+                answersList.append(answers[counter][2::])
+                
+            QandAList.append([question[3],answersList])
+
+        return QandAList
     
     def ShowAnswers(self, questionID):
         

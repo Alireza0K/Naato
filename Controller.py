@@ -124,6 +124,12 @@ class Controller:
         
         return check
     
+    def ShowQandA(self, groupID):
+        
+        QandA = model.ShowQuestionsAndAnswers(groupID=groupID)
+        
+        return QandA
+    
     def GameFirstSection(self, users, group):
         
         for user in users:
