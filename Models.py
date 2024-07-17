@@ -270,9 +270,11 @@ class Models:
     
     def CheckNaato(self, users):
         
-        for user in users:
+        # for user in users:
             
-            print(user)
+        #     print(user)
+        
+        return True
     
     def GetFacts(self, userID, fact):
         

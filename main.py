@@ -126,23 +126,21 @@ async def F(event):
         
         await event.respond("⚠️هنوز راوی سوالات رو وارد نکرده\n\nیکم صبر کن.🙏🏻")
                         
-async def sendMessageToAll(users):
+async def sendMessage(user): # Messaging Function
     
-    for user in users:
-    
-        if user[4] == None or user[4] != "narrator":
+    if user[4] == None or user[4] == " ":
         
-            await client.send_message(user[2], "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنی.😎\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F\nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nخوب فکت وارد کنی ها😁", parse_mode="markdown")
+        await client.send_message(user[2], "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
+      
+    if user[4] == "narrator":
             
-        elif user[4] == "narrator":
-            
-            keyboard= [
-                [
-                    Button.inline("وارد کردن سوال ها.", b"10")
-                ]
+        keyboard= [
+            [
+                Button.inline("وارد کردن سوال ها.", b"10")
             ]
-            
-            await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
+        ]
+        
+        await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -255,8 +253,14 @@ async def callback(event):
                         naato = cont.ChooseNaato(groupID)
                             
                         if check:
+                            
+                            usersinfo = cont.GetUsersId(groupID)
+                    
+                            users = usersinfo[0]
+                            
+                            for user in users:
                                 
-                            await sendMessageToAll(users) # Sending messsage to all user
+                                await sendMessage(user) # Sending messsage to all user
                         
     elif event.data == b"10":
         
