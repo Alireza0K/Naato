@@ -16,7 +16,7 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
-@client.on(events.NewMessage(pattern="/start"))
+@client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
     keyboard = [
@@ -55,7 +55,7 @@ async def help(event):
     
     await client.send_message(event.chat_id, "من میتونم کمکت کنم😍", buttons=keyboard)
     
-@client.on(events.NewMessage(pattern="/F"))
+@client.on(events.NewMessage(pattern="/F")) # This Section is for Geting Facts from users
 async def F(event):
     
     user = event.sender.username
@@ -224,41 +224,43 @@ async def callback(event):
         @client.on(events.NewMessage)
         async def handler(event):
             
+            MInfo = str(event.message.message)
+            
             User = event.sender
                 
-            groupinfo = cont.GetGroupInformation(event.message.message)
+            groupinfo = cont.GetGroupInformation(MInfo)
                 
-            if groupinfo != None:
+            if groupinfo != None and len(MInfo) > 20:
                     
                 groupName = groupinfo[0][0][2]
                 
                 groupID = groupinfo[0][0][1]
                 
                 regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
-                    
-                if regesterTheUser:
+                
+                if regesterTheUser[1]:
                     
                     await event.respond(f"شما با موافقیت عضو گروه {groupName}")
                 
-                usersinfo = cont.GetUsersId(groupID)
-                
-                users = usersinfo[0]
-                
-                usersCount = usersinfo[1]
-                
-                if usersCount == 3:
+                    usersinfo = cont.GetUsersId(groupID)
                     
-                    check = cont.ChooseNarrator(groupID) 
+                    users = usersinfo[0]
                     
-                    if check:
-                        
+                    usersCount = usersinfo[1]
+                    
+                    if usersCount == 3:
+                            
+                        check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
+                            
                         naato = cont.ChooseNaato(groupID)
-                        
-                        await sendMessageToAll(users)
+                            
+                        if check:
+                                
+                            await sendMessageToAll(users) # Sending messsage to all user
                         
     elif event.data == b"10":
         
-        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:")
+        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:") # This section for Get questions from Narrator
         
         @client.on(events.NewMessage(pattern="/Q"))
         async def Q(event):

@@ -250,6 +250,8 @@ class Models:
         
         result = mycursor.fetchall()
         
+        self.CheckNaato(users=result)
+        
         usersLen = len(result)
         
         choose = random.randint(0, (usersLen - 1))
@@ -265,6 +267,12 @@ class Models:
         myDB.commit()        
 
         return naatoHash
+    
+    def CheckNaato(self, users):
+        
+        for user in users:
+            
+            print(user)
     
     def GetFacts(self, userID, fact):
         
