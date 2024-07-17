@@ -128,11 +128,11 @@ async def F(event):
                         
 async def sendMessage(user): # Messaging Function
     
-    if user[4] == None or user[4] == " ":
+    if user[4] == None or user[4] == " ": # Send message to All users
         
         await client.send_message(user[2], "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
       
-    if user[4] == "narrator":
+    if user[4] == "narrator": # Send Message just for narrator
             
         keyboard= [
             [
@@ -246,7 +246,7 @@ async def callback(event):
                     
                     usersCount = usersinfo[1]
                     
-                    if usersCount == 3:
+                    if usersCount == 6:
                             
                         check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
                             

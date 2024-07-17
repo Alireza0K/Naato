@@ -170,7 +170,7 @@ class Models:
         
         lengthOfUsers = len(result)
         
-        if lengthOfUsers >= 5:
+        if lengthOfUsers >= 6:
             
             sql = ("update `groups` set open = 0 where group_Hash = '%s'" % (groupID))
             
