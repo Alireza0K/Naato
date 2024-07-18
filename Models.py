@@ -100,7 +100,7 @@ class Models:
         
         points = 15
         
-        userHash = hashlib.md5(username.encode()).hexdigest()
+        userHash = hashlib.md5(str(username).encode()).hexdigest()
         
         values = (name, username, userHash, "", groupID, points)
         

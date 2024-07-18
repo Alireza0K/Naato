@@ -128,11 +128,11 @@ async def F(event):
                         
 async def sendMessage(user): # Messaging Function
     
-    if user[4] == None or user[4] == " ": # Send message to All users
+    if user[4] == None or user[4] == '' or user[4] == 'Naato': # Send message to All users
         
-        await client.send_message(user[2], "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
+        await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
       
-    if user[4] == "narrator": # Send Message just for narrator
+    elif user[4] == "narrator": # Send Message just for narrator
             
         keyboard= [
             [
@@ -140,7 +140,7 @@ async def sendMessage(user): # Messaging Function
             ]
         ]
         
-        await client.send_message(user[2], "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
+        await client.send_message(int(user[2]), "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
 
 @client.on(events.CallbackQuery())
 async def callback(event):
@@ -205,7 +205,7 @@ async def callback(event):
         
         id = cont.Start(0)
         
-        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.username)
+        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.id)
         
         if regesterTheUser[1] == False:
             
@@ -234,33 +234,39 @@ async def callback(event):
                 
                 groupID = groupinfo[0][0][1]
                 
-                regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.username)
+                regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.id)
                 
-                if regesterTheUser[1]:
+                try:
                     
-                    await event.respond(f"شما با موافقیت عضو گروه {groupName}")
-                
-                    usersinfo = cont.GetUsersId(groupID)
+                    if regesterTheUser[1]:
+                        
+                        await event.respond(f"شما با موافقیت عضو گروه {groupName}")
                     
-                    users = usersinfo[0]
-                    
-                    usersCount = usersinfo[1]
-                    
-                    if usersCount == 6:
-                            
-                        check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                            
-                        naato = cont.ChooseNaato(groupID)
-                            
-                        if check:
-                            
-                            usersinfo = cont.GetUsersId(groupID)
-                    
-                            users = usersinfo[0]
-                            
-                            for user in users:
+                        usersinfo = cont.GetUsersId(groupID)
+                        
+                        users = usersinfo[0]
+                        
+                        usersCount = usersinfo[1]
+                        
+                        if usersCount == 3:
                                 
-                                await sendMessage(user) # Sending messsage to all user
+                            check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
+                                
+                            naato = cont.ChooseNaato(groupID)
+                                
+                            if check:
+                                
+                                usersinfo = cont.GetUsersId(groupID)
+                        
+                                users = usersinfo[0]
+                                
+                                for user in users:
+                                    
+                                    await sendMessage(user) # Sending messsage to all user
+                                    
+                except TypeError:
+                    
+                    print(TypeError) 
                         
     elif event.data == b"10":
         
