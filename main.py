@@ -166,15 +166,45 @@ async def RA(event):
                         
                     ListOfA.append(a[1])
                 
-                for user in usersinfo[0]:
+                """  This section maybe append in next -VERSION- 
+                poll = types.Poll(
+                    id = 0,
+                    question = ListOfQ[0],
+                    answers=[
+                        types.PollAnswer(ListOfA[0][0][0], b"100"),
+                        types.PollAnswer(ListOfA[0][1][0], b"200"),
+                        types.PollAnswer(ListOfA[0][2][0], b"300"),
+                        types.PollAnswer(ListOfA[0][3][0], b"400")
+                    ],
+                    multiple_choice=False
+                )
+                """
+                
+                keyboard = []
 
-                    await sendMessage(user=user, option="poll")
+                if len(usersinfo[0]) == 3:
+                            
+                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+                
+                if len(usersinfo[0]) == 6:
+                            
+                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+                    
+                    keyboard.append([Button.inline(text=usersinfo[0][3][1]), Button.inline(text=usersinfo[0][4][1])])
+                    
+                    keyboard.append([Button.inline(text=usersinfo[0][5][1])])
+                    
+                for user in usersinfo[0]:
+                    
+                    if user[4] != "narrator":
+
+                        await sendMessage(user=user, option="poll", keyboard=keyboard)
                 
             elif event.data == b'16':
                 
                 await event.respond("شما روی دوکمه شانزدهم کلیک کردید")
                         
-async def sendMessage(user, option=""): # Messaging Function
+async def sendMessage(user, option="", poll=None, keyboard=[]): # Messaging Function
     
     if user[4] == '' and option == "": # Send message to All users
         
@@ -185,12 +215,12 @@ async def sendMessage(user, option=""): # Messaging Function
         await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
       
     elif user[4] == '' and option == "poll": # Send message with poll for all users
-        
-        await client.send_message(int(user[2]), "بازی تازه شروع شد.")
+    
+        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
         
     elif user[4] == 'Naato' and option == "poll": # Send message with poll for naaro users
         
-        await client.send_message(int(user[2]), "بازی تازه شروع شد.")
+        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
         
     elif user[4] == "narrator" and option == "": # Send Message just for narrator
             
