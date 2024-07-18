@@ -100,7 +100,7 @@ class Models:
         
         points = 15
         
-        userHash = hashlib.md5(username.encode()).hexdigest()
+        userHash = hashlib.md5(str(username).encode()).hexdigest()
         
         values = (name, username, userHash, "", groupID, points)
         
@@ -170,7 +170,7 @@ class Models:
         
         lengthOfUsers = len(result)
         
-        if lengthOfUsers >= 5:
+        if lengthOfUsers >= 6:
             
             sql = ("update `groups` set open = 0 where group_Hash = '%s'" % (groupID))
             
