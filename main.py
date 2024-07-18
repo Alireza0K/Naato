@@ -1,4 +1,5 @@
 from telethon.sync import TelegramClient, events, Button
+from telethon import types
 from dotenv import load_dotenv
 from Controller import Controller
 import os
@@ -58,7 +59,7 @@ async def help(event):
 @client.on(events.NewMessage(pattern="/F")) # This Section is for Geting Facts from users
 async def F(event):
     
-    user = event.sender.username
+    user = event.sender.id
         
     user = cont.GetUserByUName(user)
     
@@ -125,14 +126,73 @@ async def F(event):
     else:
         
         await event.respond("⚠️هنوز راوی سوالات رو وارد نکرده\n\nیکم صبر کن.🙏🏻")
-                        
-async def sendMessage(user): # Messaging Function
+        
+@client.on(events.NewMessage(pattern="/RA")) # First Cicle of Game 
+async def RA(event):
     
-    if user[4] == None or user[4] == '' or user[4] == 'Naato': # Send message to All users
+    user = event.sender
+    
+    findTheUser = cont.GetUserByUName(user.id)
+    
+    keyboard = [
+        [
+            Button.inline("سوال ها", b"15"),
+            Button.inline("فَکت ها", b"16")  
+        ],
+    ]
+    
+    if findTheUser[0][4] == "narrator":
+        
+        await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
+        
+        @client.on(events.CallbackQuery)
+        async def handler(event):
+            
+            usersinfo = cont.GetUsersId(group=findTheUser[0][5])    
+                
+            if event.data == b'15':
+                
+                QandA = cont.ShowQandA(groupID=findTheUser[0][5])
+                
+                ListOfQ = []
+                
+                ListOfA = []
+                
+                for q in QandA:
+                    
+                    ListOfQ.append(q[0])
+                    
+                for a in QandA:
+                        
+                    ListOfA.append(a[1])
+                
+                for user in usersinfo[0]:
+
+                    await sendMessage(user=user, option="poll")
+                
+            elif event.data == b'16':
+                
+                await event.respond("شما روی دوکمه شانزدهم کلیک کردید")
+                        
+async def sendMessage(user, option=""): # Messaging Function
+    
+    if user[4] == '' and option == "": # Send message to All users
         
         await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
       
-    elif user[4] == "narrator": # Send Message just for narrator
+    elif user[4] == 'Naato' and option == "": # Send message to naato users
+        
+        await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
+      
+    elif user[4] == '' and option == "poll": # Send message with poll for all users
+        
+        await client.send_message(int(user[2]), "بازی تازه شروع شد.")
+        
+    elif user[4] == 'Naato' and option == "poll": # Send message with poll for naaro users
+        
+        await client.send_message(int(user[2]), "بازی تازه شروع شد.")
+        
+    elif user[4] == "narrator" and option == "": # Send Message just for narrator
             
         keyboard= [
             [
@@ -275,7 +335,7 @@ async def callback(event):
         @client.on(events.NewMessage(pattern="/Q"))
         async def Q(event):
             
-            user = event.sender.username
+            user = event.sender.id
             
             user = cont.GetUserByUName(user)
             
@@ -294,6 +354,10 @@ async def callback(event):
                 await client.send_message(event.chat_id, 
                                           "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1``` \nجواب درست را با `جواب = 1` نشان میدهیم",
                                           parse_mode="markdown")
+            
+            elif questions[0] == False:
+                
+                await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
             
             else:
                 
