@@ -17,6 +17,8 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
+listOfVoite = []
+
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
@@ -147,65 +149,47 @@ async def RA(event):
         
         @client.on(events.CallbackQuery)
         async def handler(event):
-            
-            usersinfo = cont.GetUsersId(group=findTheUser[0][5])    
                 
             if event.data == b'15':
                 
-                QandA = cont.ShowQandA(groupID=findTheUser[0][5])
+                global question
                 
-                ListOfQ = []
+                global answers
                 
-                ListOfA = []
+                question = cont.ShowQuestion(groupID=findTheUser[0][5])
                 
-                for q in QandA:
-                    
-                    ListOfQ.append(q[0])
-                    
-                for a in QandA:
-                        
-                    ListOfA.append(a[1])
-                
-                """  This section maybe append in next -VERSION- 
-                poll = types.Poll(
-                    id = 0,
-                    question = ListOfQ[0],
-                    answers=[
-                        types.PollAnswer(ListOfA[0][0][0], b"100"),
-                        types.PollAnswer(ListOfA[0][1][0], b"200"),
-                        types.PollAnswer(ListOfA[0][2][0], b"300"),
-                        types.PollAnswer(ListOfA[0][3][0], b"400")
-                    ],
-                    multiple_choice=False
-                )
-                """
+                answers = cont.ShowAnswers(questionID=question[1])
                 
                 keyboard = []
-
-                if len(usersinfo[0]) == 3:
-                            
-                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
                 
-                if len(usersinfo[0]) == 6:
-                            
-                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+                for count in range(0,len(answers)):
                     
-                    keyboard.append([Button.inline(text=usersinfo[0][3][1]), Button.inline(text=usersinfo[0][4][1])])
-                    
-                    keyboard.append([Button.inline(text=usersinfo[0][5][1])])
-                    
-                for user in usersinfo[0]:
-                    
-                    if user[4] != "narrator":
+                    if answers[count][3] == 0:
+                        
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
 
-                        await sendMessage(user=user, option="poll", keyboard=keyboard)
+                    elif answers[count][3] == 1:
+                        
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
                 
+                # for answer in answers:
+                    
+                #     if answer[3] == 0:
+                        
+                #         keyboard.append([Button.inline(answer[2], b"1001F")])
+                        
+                #     elif answer[3] == 1:
+                        
+                #        keyboard.append([Button.inline(answer[2], b"1001T")]) 
+                       
+                await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+
             elif event.data == b'16':
                 
-                await event.respond("شما روی دوکمه شانزدهم کلیک کردید")
-                        
-async def sendMessage(user, option="", poll=None, keyboard=[]): # Messaging Function
-    
+                await client.send_message(event.chat_id,"سلام ۱۶")
+
+async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
+
     if user[4] == '' and option == "": # Send message to All users
         
         await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
@@ -216,11 +200,15 @@ async def sendMessage(user, option="", poll=None, keyboard=[]): # Messaging Func
       
     elif user[4] == '' and option == "poll": # Send message with poll for all users
     
-        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
+        await client.send_message(int(user[2]), text, buttons=keyboard)
+        
+    elif user[4] == 'narrator' and option == "poll": # Send message with poll for Narrator
+    
+        await client.send_message(int(user[2]), text, buttons=keyboard)
         
     elif user[4] == 'Naato' and option == "poll": # Send message with poll for naaro users
         
-        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
+        await client.send_message(int(user[2]), text, buttons=keyboard)
         
     elif user[4] == "narrator" and option == "": # Send Message just for narrator
             
@@ -438,6 +426,26 @@ async def callback(event):
                 else:
                     
                     await event.respond("چهار جواب شما ثبت شده.")
+                
+    if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+        
+        if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
+            
+            for answer in answers:
+                
+                if answer[3] == 1:
+                    
+                    text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود."
+                    
+                    await client.send_message(event.chat_id, text, parse_mode='markdown')
+                    
+                    cont.CheckedQ(quesionID=question[1])
+                    
+        elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+            
+            await client.send_message(event.chat_id, "جواب شما درست بود ✅🧠")
+            
+            cont.CheckedQ(quesionID=question[1])
                     
 client.start()
 

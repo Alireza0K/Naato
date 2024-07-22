@@ -130,6 +130,22 @@ class Controller:
         
         return QandA
     
+    def CheckedQ(self, quesionID):
+        
+        model.QuestionChecked(quesionID)
+        
+    def ShowQuestion(self, groupID):
+        
+        question = model.ShowQuestion(groupID)
+        
+        return question
+    
+    def ShowAnswers(self, questionID):
+        
+        answers = model.ShowAnswers(questionID=questionID)
+        
+        return answers
+        
     def GameFirstSection(self, users, group):
         
         for user in users:
