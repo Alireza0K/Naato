@@ -431,18 +431,21 @@ async def callback(event):
         
         if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
             
-            print(False)
-            
             for answer in answers:
                 
                 if answer[3] == 1:
+                    
                     text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود."
                     
                     await client.send_message(event.chat_id, text, parse_mode='markdown')
                     
+                    cont.CheckedQ(quesionID=question[1])
+                    
         elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
             
             await client.send_message(event.chat_id, "جواب شما درست بود ✅🧠")
+            
+            cont.CheckedQ(quesionID=question[1])
                     
 client.start()
 

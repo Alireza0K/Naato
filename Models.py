@@ -270,9 +270,9 @@ class Models:
     
     def CheckNaato(self, users):
         
-        # for user in users:
+        for user in users:
             
-        #     print(user)
+            print(user)
         
         return True
     
@@ -348,7 +348,7 @@ class Models:
     
     def QuestionChecked(self, QuestionID):
         
-        sql = "update `questions` set check = 0 where question_Hash  = '%s'" % (QuestionID)
+        sql = "update `questions` set `check` = 0 where question_Hash  = '%s'" % (QuestionID)
         
         mycursor.execute(sql)
         
