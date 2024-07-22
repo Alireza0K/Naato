@@ -353,6 +353,8 @@ class Models:
         mycursor.execute(sql)
         
         myDB.commit()
+        
+        return True
     
     def GetAnswers(self, question_Hash, answers, check):
         
@@ -416,6 +418,16 @@ class Models:
             QandAList.append([question[3],answersList])
 
         return QandAList
+    
+    def ShowQuestion(self, groupID):
+        
+        sql = "select * from questions where groupID = '%s' and `check` = 1" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        questions = mycursor.fetchall()
+        
+        return questions[0]
     
     def ShowAnswers(self, questionID):
         
