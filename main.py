@@ -171,16 +171,6 @@ async def RA(event):
                     elif answers[count][3] == 1:
                         
                         keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
-                
-                # for answer in answers:
-                    
-                #     if answer[3] == 0:
-                        
-                #         keyboard.append([Button.inline(answer[2], b"1001F")])
-                        
-                #     elif answer[3] == 1:
-                        
-                #        keyboard.append([Button.inline(answer[2], b"1001T")]) 
                        
                 await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
 
