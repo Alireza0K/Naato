@@ -19,6 +19,8 @@ cont = Controller("/start")
 
 listOfVoite = []
 
+CountFirstRound = []
+
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
@@ -134,6 +136,8 @@ async def RA(event):
     
     user = event.sender
     
+    global findTheUser
+    
     findTheUser = cont.GetUserByUName(user.id)
     
     keyboard = [
@@ -146,37 +150,6 @@ async def RA(event):
     if findTheUser[0][4] == "narrator":
         
         await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
-        
-        @client.on(events.CallbackQuery)
-        async def handler(event):
-                
-            if event.data == b'15':
-                
-                global question
-                
-                global answers
-                
-                question = cont.ShowQuestion(groupID=findTheUser[0][5])
-                
-                answers = cont.ShowAnswers(questionID=question[1])
-                
-                keyboard = []
-                
-                for count in range(0,len(answers)):
-                    
-                    if answers[count][3] == 0:
-                        
-                        keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
-
-                    elif answers[count][3] == 1:
-                        
-                        keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
-                       
-                await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
-
-            elif event.data == b'16':
-                
-                await client.send_message(event.chat_id,"سلام ۱۶")
 
 async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
 
@@ -416,7 +389,43 @@ async def callback(event):
                 else:
                     
                     await event.respond("چهار جواب شما ثبت شده.")
+    
+    if event.data == b'15':
+
+        global question
                 
+        global answers
+                
+        CountFirstRound.append(1)
+
+        keyboard = []
+
+        if len(CountFirstRound) <= 2:
+            
+            question = cont.ShowQuestion(groupID=findTheUser[0][5])
+
+            answers = cont.ShowAnswers(questionID=question[1])
+
+            for count in range(0, len(answers)):
+
+                if answers[count][3] == 0:
+
+                    keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
+
+                elif answers[count][3] == 1:
+
+                    keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
+                    
+            await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+
+        else:
+
+            await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی یا این که **فَکت** هارو بپرسید. 🔗")
+    
+    if event.data == b'16':
+                
+        await client.send_message(event.chat_id,"سلام ۱۶")
+        
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
         if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
