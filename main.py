@@ -17,6 +17,8 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
+listOfVoite = []
+
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
@@ -164,47 +166,31 @@ async def RA(event):
                     
                 for a in QandA:
                         
-                    ListOfA.append(a[1])
-                
-                """  This section maybe append in next -VERSION- 
-                poll = types.Poll(
-                    id = 0,
-                    question = ListOfQ[0],
-                    answers=[
-                        types.PollAnswer(ListOfA[0][0][0], b"100"),
-                        types.PollAnswer(ListOfA[0][1][0], b"200"),
-                        types.PollAnswer(ListOfA[0][2][0], b"300"),
-                        types.PollAnswer(ListOfA[0][3][0], b"400")
-                    ],
-                    multiple_choice=False
-                )
-                """
+                    ListOfA.append(a)
                 
                 keyboard = []
-
-                if len(usersinfo[0]) == 3:
-                            
-                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
                 
-                if len(usersinfo[0]) == 6:
-                            
-                    keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+                for count in range(0,len(ListOfA)):
                     
-                    keyboard.append([Button.inline(text=usersinfo[0][3][1]), Button.inline(text=usersinfo[0][4][1])])
+                    if ListOfA[0][1][count][1] == 0:
                     
-                    keyboard.append([Button.inline(text=usersinfo[0][5][1])])
+                        keyboard.append([Button.inline(ListOfA[0][1][count][0], f"100{count}F")])
+                        
+                    elif ListOfA[0][1][count][1] == 1:
+                        
+                         keyboard.append([Button.inline(ListOfA[0][1][count][0], f"100{count}T")])
                     
                 for user in usersinfo[0]:
                     
                     if user[4] != "narrator":
 
-                        await sendMessage(user=user, option="poll", keyboard=keyboard)
+                        await sendMessage(user=user, option="poll", keyboard=keyboard, text=ListOfQ[0])
                 
             elif event.data == b'16':
                 
                 await event.respond("شما روی دوکمه شانزدهم کلیک کردید")
                         
-async def sendMessage(user, option="", poll=None, keyboard=[]): # Messaging Function
+async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
     
     if user[4] == '' and option == "": # Send message to All users
         
@@ -216,11 +202,11 @@ async def sendMessage(user, option="", poll=None, keyboard=[]): # Messaging Func
       
     elif user[4] == '' and option == "poll": # Send message with poll for all users
     
-        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
+        await client.send_message(int(user[2]), text, buttons=keyboard)
         
     elif user[4] == 'Naato' and option == "poll": # Send message with poll for naaro users
         
-        await client.send_message(int(user[2]), "چکسی رو انتخواب میکنی", buttons=keyboard)
+        await client.send_message(int(user[2]), text, buttons=keyboard)
         
     elif user[4] == "narrator" and option == "": # Send Message just for narrator
             
@@ -438,6 +424,21 @@ async def callback(event):
                 else:
                     
                     await event.respond("چهار جواب شما ثبت شده.")
+    print(event.data)              
+    """ Callback function for voiting to answers """                
+    if str(event.data) in [str(b"1000F"), str(b"1001F"), str(b"1002F"), str(b"1003F"), str(b"1000T"), str(b"1001T"), str(b"1002T"), str(b"1003T")]:
+        
+        if event.sender.id not in listOfVoite: 
+
+            listOfVoite.append(event.sender.id) 
+            
+            await event.answer("خیلی هم عالی شما جواب خودتون رو وارد کردید 🧠🫶", alert=True)
+            
+        elif event.sender.id in listOfVoite: 
+
+            await event.answer(f"شما یک گزینه رو انتخاب کردید.\nدیگه نمی تونید انتخاب خودتون رو عوض کنید.😵‍💫",
+                               alert=True)
+        
                     
 client.start()
 

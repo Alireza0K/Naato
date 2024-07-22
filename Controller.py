@@ -130,6 +130,10 @@ class Controller:
         
         return QandA
     
+    def CheckedQ(self, quesionID):
+        
+        model.QuestionChecked(quesionID)
+    
     def GameFirstSection(self, users, group):
         
         for user in users:

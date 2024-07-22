@@ -322,7 +322,7 @@ class Models:
             
             question_Hash = hash(question + str(datetime.datetime.now()))
             
-            sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`) values (NULL, %s, '%s', '%s')" % (question_Hash, groupID, question)
+            sql = "insert into `questions` (`ID`, `question_Hash`, `groupID`, `text`, `check`) values (NULL, %s, '%s', '%s', 1)" % (question_Hash, groupID, question)
             
             mycursor.execute(sql)
             
@@ -345,6 +345,14 @@ class Models:
             check = False
             
         return check 
+    
+    def QuestionChecked(self, QuestionID):
+        
+        sql = "update `questions` set check = 0 where question_Hash  = '%s'" % (QuestionID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
     
     def GetAnswers(self, question_Hash, answers, check):
         
