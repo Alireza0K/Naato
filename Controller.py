@@ -14,6 +14,8 @@ class Controller:
         
             group = model.GroupCreation() # First step Create Groups 
             
+            model.ScoreScope(group[0])
+            
         elif h == 1:
             
             group = G
@@ -145,6 +147,18 @@ class Controller:
         answers = model.ShowAnswers(questionID=questionID)
         
         return answers
+    
+    def ScoreScope(self, groupID, command=True):
+        
+        result = model.AutoScoreScope(groupID=groupID, command=command)
+        
+        return result
+    
+    def ShowScore(self, groupID):
+        
+        score = model.ShowScore(groupID=groupID)
+        
+        return score
         
     def GameFirstSection(self, users, group):
         

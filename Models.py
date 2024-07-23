@@ -523,9 +523,11 @@ class Models:
         
         myDB.commit()
         
-        return
+        return True
     
     def AutoScoreScope(self, groupID, command = None):
+        
+        check = None
         
         sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
         
@@ -539,11 +541,15 @@ class Models:
             
             score = self.IncreaseScore(groupID, score)
             
+            check = True
+            
         if command == False:
             
             score = self.DecreaseScore(groupID, score)
+            
+            check = False
         
-        return score
+        return [score, check]
     
     def IncreaseScore(self, groupID, score):
         
@@ -564,6 +570,16 @@ class Models:
         myDB.commit()
         
         return score
+
+    def ShowScore(self, groupID):
+        
+        sql = "select * from `score_scope` where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        return result
     
     def CycleSeter(self, groupID, naatoID):
         

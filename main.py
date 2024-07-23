@@ -390,7 +390,7 @@ async def callback(event):
                     
                     await event.respond("چهار جواب شما ثبت شده.")
     
-    if event.data == b'15':
+    if event.data == b'15': # This button is for QandA round One
 
         global question
                 
@@ -422,7 +422,7 @@ async def callback(event):
 
             await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی یا این که **فَکت** هارو بپرسید. 🔗")
     
-    if event.data == b'16':
+    if event.data == b'16': # This Button is For Facts in Round One
                 
         await client.send_message(event.chat_id,"سلام ۱۶")
         
@@ -440,12 +440,26 @@ async def callback(event):
                     
                     cont.CheckedQ(quesionID=question[1])
                     
-        elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+            command=False
+                
+            cont.ScoreScope(groupID=findTheUser[0][5], command=command)
             
-            await client.send_message(event.chat_id, "جواب شما درست بود ✅🧠")
+            score = cont.ShowScore(findTheUser[0][5])
             
-            cont.CheckedQ(quesionID=question[1])
+            await client.send_message(event.chat_id, f"امتیاز شما **{score[0][1]}**")
                     
+        elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+ 
+            cont.CheckedQ(quesionID=question[1])
+            
+            command=True
+            
+            cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+            
+            score = cont.ShowScore(findTheUser[0][5])
+            
+            await client.send_message(event.chat_id, f"جواب شما درست بود ✅🧠\n\nامتیاز شما **{score[0][1]}**")     
+               
 client.start()
 
 client.run_until_disconnected()
