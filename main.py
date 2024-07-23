@@ -428,37 +428,41 @@ async def callback(event):
         
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
-        if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
-            
-            for answer in answers:
+        if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
-                if answer[3] == 1:
+            if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
+
+                command=False
                     
-                    text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود."
-                    
-                    await client.send_message(event.chat_id, text, parse_mode='markdown')
-                    
-                    cont.CheckedQ(quesionID=question[1])
-                    
-            command=False
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
                 
-            cont.ScoreScope(groupID=findTheUser[0][5], command=command)
-            
-            score = cont.ShowScore(findTheUser[0][5])
-            
-            await client.send_message(event.chat_id, f"امتیاز شما **{score[0][1]}**")
+                score = cont.ShowScore(findTheUser[0][5])
+                
+                for answer in answers:
                     
-        elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
- 
-            cont.CheckedQ(quesionID=question[1])
-            
-            command=True
-            
-            cont.ScoreScope(groupID=findTheUser[0][5], command=command)
-            
-            score = cont.ShowScore(findTheUser[0][5])
-            
-            await client.send_message(event.chat_id, f"جواب شما درست بود ✅🧠\n\nامتیاز شما **{score[0][1]}**")     
+                    if answer[3] == 1:
+                        
+                        text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
+
+                        await client.send_message(event.chat_id, text, parse_mode='markdown')
+                        
+                        cont.CheckedQ(quesionID=question[1])   
+                        
+            elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+    
+                cont.CheckedQ(quesionID=question[1])
+                
+                command=True
+                
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                
+                score = cont.ShowScore(findTheUser[0][5])
+                
+                await client.send_message(event.chat_id, f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾") 
+        
+        elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
+                
+            await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
                
 client.start()
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 17, 2023 at 06:41 AM
+-- Generation Time: Jul 23, 2024 at 01:46 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.0
 
@@ -70,7 +70,8 @@ CREATE TABLE `questions` (
   `ID` int NOT NULL,
   `question_Hash` varchar(50) NOT NULL,
   `groupID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `text` varchar(250) NOT NULL
+  `text` varchar(250) NOT NULL,
+  `check` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -82,7 +83,7 @@ CREATE TABLE `questions` (
 CREATE TABLE `score_scope` (
   `ID` int NOT NULL,
   `length` int NOT NULL,
-  `groupID` int NOT NULL
+  `groupID` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -139,13 +140,15 @@ ALTER TABLE `questions`
 -- Indexes for table `score_scope`
 --
 ALTER TABLE `score_scope`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `groupID` (`groupID`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `user_Hash_2` (`user_Hash`),
   ADD KEY `groupID` (`groupID`),
   ADD KEY `groupID_2` (`groupID`),
   ADD KEY `user_Hash` (`user_Hash`);
@@ -211,6 +214,12 @@ ALTER TABLE `facts`
 --
 ALTER TABLE `questions`
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `groups` (`group_question_Hash`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `score_scope`
+--
+ALTER TABLE `score_scope`
+  ADD CONSTRAINT `score_scope_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `groups` (`group_Hash`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
