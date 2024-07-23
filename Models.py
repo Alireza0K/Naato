@@ -356,6 +356,22 @@ class Models:
         
         return True
     
+    def CheckTheQuestionChecked(self, QuestionID):
+        
+        check = True
+        
+        sql = "select * from questions where question_Hash = '%s'" % (QuestionID)
+        
+        mycursor.execute(sql)
+        
+        question = mycursor.fetchall()
+        
+        if question[0][4] == 0:
+            
+            check = False
+            
+        return check    
+    
     def GetAnswers(self, question_Hash, answers, check):
         
         checkA = self.CheckAnswers(question_Hash)

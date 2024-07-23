@@ -136,6 +136,12 @@ class Controller:
         
         model.QuestionChecked(quesionID)
         
+    def CheckTheQuestionChecked(self, quesionID):
+        
+        check = model.CheckTheQuestionChecked(quesionID)
+        
+        return check
+        
     def ShowQuestion(self, groupID):
         
         question = model.ShowQuestion(groupID)
