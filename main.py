@@ -21,6 +21,8 @@ listOfVoite = []
 
 CountFirstRound = []
 
+FactCounter = []
+
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
@@ -423,8 +425,30 @@ async def callback(event):
             await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی یا این که **فَکت** هارو بپرسید. 🔗")
     
     if event.data == b'16': # This Button is For Facts in Round One
+        
+        facts = []
+        
+        nuser = cont.GetUserByUName(event.sender.id)
+        
+        users = cont.GetUsersId(group=nuser[0][5])
+        
+        for user in users[0]:
+
+            if user[4] == "Naato":
                 
-        await client.send_message(event.chat_id,"سلام ۱۶")
+                facts = cont.ShowFacts(user[3])
+              
+        FactCounter.append(1)
+        
+        if len(FactCounter) <= 3:
+            
+            await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
+            
+            cont.FactCheck(facts[0][0])
+            
+        else:
+            
+            await client.send_message(event.chat_id, "شما سه سوال خود را پرسیده اید و الان باید برید **راند** بعدی یا این که **سوال** هارو بپرسید. 🔗")
         
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         

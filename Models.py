@@ -282,7 +282,7 @@ class Models:
         
         if check:
         
-            sql = "INSERT INTO `facts` (`ID`, `userID`, `text`) VALUES (NULL, '%s', '%s');" % (userID, fact)
+            sql = "INSERT INTO `facts` (`ID`, `userID`, `text`, `check`) VALUES (NULL, '%s', '%s', 1);" % (userID, fact)
             
             mycursor.execute(sql)
             
@@ -511,25 +511,25 @@ class Models:
             
         return True
     
-    def ShowFacts(self, Counter, NaatoID):
-        
-        Counter += 1
+    def ShowFacts(self, NaatoID):
                 
-        print("|****** (Fact) ******|")
-                
-        sql = "select * from `facts` where userID = '%s'" % (NaatoID)
+        sql = "select * from `facts` where userID = '%s' AND `check` = 1" % (NaatoID)
             
         mycursor.execute(sql)
                         
         facts = mycursor.fetchall()
-                        
-        print(str(Counter)+".", facts[Counter][2])
-                
-        time.sleep(5)
-                
-        os.system("clear")
+
+        return facts
+    
+    def FactChecked(self,factID):
         
-        return facts[Counter][2]
+        sql = "update `facts` set `check` = 0 where ID  = '%s'" % (factID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
+        
+        return True
     
     def ScoreScope(self, groupID):
         
