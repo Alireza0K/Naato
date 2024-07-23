@@ -165,6 +165,16 @@ class Controller:
         score = model.ShowScore(groupID=groupID)
         
         return score
+    
+    def ShowFacts(self, naatoID):
+        
+        facts = model.ShowFacts(naatoID)
+        
+        return facts
+    
+    def FactCheck(self, factID):
+        
+        model.FactChecked(factID)
         
     def GameFirstSection(self, users, group):
         
