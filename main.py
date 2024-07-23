@@ -153,6 +153,36 @@ async def RA(event):
         
         await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
 
+async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
+    
+    usersinfo = cont.GetUserByUName(event.sender.id)
+    
+    usersinfo = cont.GetUsersId(usersinfo[0][5])
+    
+    if len(listA) == roundCounter[0] and len(listB) == roundCounter[1]:
+        
+        keyboard = []
+
+        if len(usersinfo[0]) == 3:
+
+            keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+
+        elif len(usersinfo[0]) == 6:
+
+            keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
+
+            keyboard.append([Button.inline(text=usersinfo[0][3][1]), Button.inline(text=usersinfo[0][4][1])])
+
+            keyboard.append([Button.inline(text=usersinfo[0][5][1])])
+            
+        for user in usersinfo[0]:
+            
+            if user[4] != "narrator":
+                
+                text = f"""**Let's Fucking Do this 🔥👺**\nچه کسی رو **انتخاب** میکنی؟"""
+                
+                await sendMessage(user=user, option="poll", text=text,keyboard=keyboard)
+    
 async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
 
     if user[4] == '' and option == "": # Send message to All users
@@ -185,6 +215,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         
         await client.send_message(int(user[2]), "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
 
+    elif option == "score":
+
+        await client.send_message(int(user[2]), text)
+        
 @client.on(events.CallbackQuery())
 async def callback(event):
     if event.data == b'1':
@@ -449,44 +483,54 @@ async def callback(event):
         else:
             
             await client.send_message(event.chat_id, "شما سه سوال خود را پرسیده اید و الان باید برید **راند** بعدی یا این که **سوال** هارو بپرسید. 🔗")
+            
+        await Voite(event,CountFirstRound, FactCounter, [2, 3])
         
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
-        if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
-                
-            if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
-
-                command=False
-                    
-                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
-                
-                score = cont.ShowScore(findTheUser[0][5])
-                
-                for answer in answers:
-                    
-                    if answer[3] == 1:
-                        
-                        text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
-
-                        await client.send_message(event.chat_id, text, parse_mode='markdown')
-                        
-                        cont.CheckedQ(quesionID=question[1])   
-                        
-            elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
-    
-                cont.CheckedQ(quesionID=question[1])
-                
-                command=True
-                
-                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
-                
-                score = cont.ShowScore(findTheUser[0][5])
-                
-                await client.send_message(event.chat_id, f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾") 
+        # users = cont.GetUsersId(findTheUser[0][5])
         
-        elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
+        # if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
-            await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
+        #     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
+
+        #         command=False
+                    
+        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                
+        #         score = cont.ShowScore(findTheUser[0][5])
+                
+        #         for answer in answers:
+                    
+        #             if answer[3] == 1:
+                        
+        #                 text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
+
+        #                 for user in users[0]:
+
+        #                     await sendMessage(user=user, option="score", text=text)
+
+        #                 cont.CheckedQ(quesionID=question[1])   
+                        
+        #     elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+    
+        #         cont.CheckedQ(quesionID=question[1])
+                
+        #         command=True
+                
+        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                
+        #         score = cont.ShowScore(findTheUser[0][5])
+                
+        #         for user in users[0]:
+
+        #             await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
+        
+        # elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
+                
+        #     await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
+            
+        await Voite(event,[1,1], [1,1,1], [2, 3])
                
 client.start()
 
