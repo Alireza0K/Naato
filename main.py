@@ -185,6 +185,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         
         await client.send_message(int(user[2]), "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
 
+    elif option == "score":
+
+        await client.send_message(int(user[2]), text)
+        
 @client.on(events.CallbackQuery())
 async def callback(event):
     if event.data == b'1':
@@ -452,6 +456,8 @@ async def callback(event):
         
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
+        users = cont.GetUsersId(findTheUser[0][5])
+        
         if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
             if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
@@ -468,8 +474,10 @@ async def callback(event):
                         
                         text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
 
-                        await client.send_message(event.chat_id, text, parse_mode='markdown')
-                        
+                        for user in users[0]:
+
+                            await sendMessage(user=user, option="score", text=text)
+
                         cont.CheckedQ(quesionID=question[1])   
                         
             elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
@@ -482,7 +490,9 @@ async def callback(event):
                 
                 score = cont.ShowScore(findTheUser[0][5])
                 
-                await client.send_message(event.chat_id, f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾") 
+                for user in users[0]:
+
+                    await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
         
         elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
                 
