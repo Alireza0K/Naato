@@ -488,49 +488,49 @@ async def callback(event):
         
     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
-        # users = cont.GetUsersId(findTheUser[0][5])
+        users = cont.GetUsersId(findTheUser[0][5])
         
-        # if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
+        if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
-        #     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
+            if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
 
-        #         command=False
+                command=False
                     
-        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
                 
-        #         score = cont.ShowScore(findTheUser[0][5])
+                score = cont.ShowScore(findTheUser[0][5])
                 
-        #         for answer in answers:
+                for answer in answers:
                     
-        #             if answer[3] == 1:
+                    if answer[3] == 1:
                         
-        #                 text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
+                        text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
 
-        #                 for user in users[0]:
+                        for user in users[0]:
 
-        #                     await sendMessage(user=user, option="score", text=text)
+                            await sendMessage(user=user, option="score", text=text)
 
-        #                 cont.CheckedQ(quesionID=question[1])   
+                        cont.CheckedQ(quesionID=question[1])   
                         
-        #     elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+            elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
     
-        #         cont.CheckedQ(quesionID=question[1])
+                cont.CheckedQ(quesionID=question[1])
                 
-        #         command=True
+                command=True
                 
-        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
                 
-        #         score = cont.ShowScore(findTheUser[0][5])
+                score = cont.ShowScore(findTheUser[0][5])
                 
-        #         for user in users[0]:
+                for user in users[0]:
 
-        #             await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
+                    await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
         
-        # elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
+        elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
                 
-        #     await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
+            await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
             
-        await Voite(event,[1,1], [1,1,1], [2, 3])
+        await Voite(event,CountFirstRound, FactCounter, [2, 3])
                
 client.start()
 
