@@ -159,22 +159,66 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
     
     usersinfo = cont.GetUsersId(usersinfo[0][5])
     
+    users = usersinfo[0][1:]
+    
     if len(listA) == roundCounter[0] and len(listB) == roundCounter[1]:
         
-        keyboard = []
-
         if len(usersinfo[0]) == 3:
-
-            keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
-
-        elif len(usersinfo[0]) == 6:
-
-            keyboard.append([Button.inline(text=usersinfo[0][1][1]), Button.inline(text=usersinfo[0][2][1])])
-
-            keyboard.append([Button.inline(text=usersinfo[0][3][1]), Button.inline(text=usersinfo[0][4][1])])
-
-            keyboard.append([Button.inline(text=usersinfo[0][5][1])])
             
+            keyboard = [
+                []
+            ]
+            
+            for userCount in range(0,len(users)):
+                
+                if users[userCount][4] != "Naato":
+
+                    keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                
+                elif users[userCount][4] == "Naato":
+
+                    keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                    
+        elif len(usersinfo[0]) == 6:
+            
+            keyboard = [
+                [],
+                [],
+                []
+            ]
+            
+            for userCount in range(0,len(users)):
+                
+                if userCount <= 1: 
+                
+                    if users[userCount][4] != "Naato":
+                        
+                        keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                    
+                    elif users[userCount][4] == "Naato":
+
+                        keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        
+                elif userCount <= 3:
+
+                    if users[userCount][4] != "Naato":
+                        
+                        keyboard[1].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                    
+                    elif users[userCount][4] == "Naato":
+
+                        keyboard[1].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        
+                elif userCount == 4:
+
+                    if users[userCount][4] != "Naato":
+                        
+                        keyboard[2].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                    
+                    elif users[userCount][4] == "Naato":
+
+                        keyboard[2].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        
         for user in usersinfo[0]:
             
             if user[4] != "narrator":
@@ -182,6 +226,10 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 text = f"""**Let's Fucking Do this 🔥👺**\nچه کسی رو **انتخاب** میکنی؟"""
                 
                 await sendMessage(user=user, option="poll", text=text,keyboard=keyboard)
+                
+        global voitingButtonVal 
+        
+        voitingButtonVal = [str(b"2000"),str(b"2001"),str(b"2002"),str(b"2003"),str(b"2004"),str(b"2000N"),str(b"2001N"),str(b"2002N"),str(b"2003N"),str(b"2004N")]
     
 async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
 
@@ -426,7 +474,7 @@ async def callback(event):
                     
                     await event.respond("چهار جواب شما ثبت شده.")
     
-    if event.data == b'15': # This button is for QandA round One
+    elif event.data == b'15': # This button is for QandA round One
 
         global question
                 
@@ -458,7 +506,7 @@ async def callback(event):
 
             await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی یا این که **فَکت** هارو بپرسید. 🔗")
     
-    if event.data == b'16': # This Button is For Facts in Round One
+    elif event.data == b'16': # This Button is For Facts in Round One
         
         facts = []
         
@@ -486,9 +534,9 @@ async def callback(event):
             
         await Voite(event,CountFirstRound, FactCounter, [2, 3])
         
-    if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+    elif str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
-        # users = cont.GetUsersId(findTheUser[0][5])
+        users = cont.GetUsersId(findTheUser[0][5])
         
         # if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
@@ -530,8 +578,24 @@ async def callback(event):
                 
         #     await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
             
+        # await Voite(event,CountFirstRound, FactCounter, [2, 3])
+        
         await Voite(event,[1,1], [1,1,1], [2, 3])
-               
+        
+    elif str(event.data) in voitingButtonVal:
+        
+        R = [str(b"2000"),str(b"2001"),str(b"2002"),str(b"2003"),str(b"2004")]
+        
+        N = [str(b"2000N"),str(b"2001N"),str(b"2002N"),str(b"2003N"),str(b"2004N")]
+        
+        if str(event.data) in R:
+            
+            print(event.data, "PEACE SIDE 🎃")
+        
+        elif str(event.data) in N:
+            
+            print(event.data, "EVIL SIDE 👺")
+            
 client.start()
 
 client.run_until_disconnected()
