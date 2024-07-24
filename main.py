@@ -19,9 +19,15 @@ cont = Controller("/start")
 
 listOfVoite = []
 
+global voitingButtonVal 
+        
+voitingButtonVal = []
+
 CountFirstRound = []
 
 FactCounter = []
+
+terminate = []
 
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
@@ -162,7 +168,7 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
     users = usersinfo[0][1:]
     
     if len(listA) == roundCounter[0] and len(listB) == roundCounter[1]:
-        
+
         if len(usersinfo[0]) == 3:
             
             keyboard = [
@@ -173,11 +179,11 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 
                 if users[userCount][4] != "Naato":
 
-                    keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                    keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}"))
                 
                 elif users[userCount][4] == "Naato":
 
-                    keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                    keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                     
         elif len(usersinfo[0]) == 6:
             
@@ -193,31 +199,31 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 
                     if users[userCount][4] != "Naato":
                         
-                        keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                        keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}"))
                     
                     elif users[userCount][4] == "Naato":
 
-                        keyboard[0].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                         
                 elif userCount <= 3:
 
                     if users[userCount][4] != "Naato":
                         
-                        keyboard[1].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                        keyboard[1].append(Button.inline(users[userCount][1], f"{users[userCount][2]}"))
                     
                     elif users[userCount][4] == "Naato":
 
-                        keyboard[1].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        keyboard[1].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                         
                 elif userCount == 4:
 
                     if users[userCount][4] != "Naato":
                         
-                        keyboard[2].append(Button.inline(users[userCount][1], f"200{userCount}"))
+                        keyboard[2].append(Button.inline(users[userCount][1], f"{users[userCount][2]}"))
                     
                     elif users[userCount][4] == "Naato":
 
-                        keyboard[2].append(Button.inline(users[userCount][1], f"200{userCount}N"))
+                        keyboard[2].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                         
         for user in usersinfo[0]:
             
@@ -227,10 +233,14 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 
                 await sendMessage(user=user, option="poll", text=text,keyboard=keyboard)
                 
-        global voitingButtonVal 
+        for count in range(0,len(keyboard)):
         
-        voitingButtonVal = [str(b"2000"),str(b"2001"),str(b"2002"),str(b"2003"),str(b"2004"),str(b"2000N"),str(b"2001N"),str(b"2002N"),str(b"2003N"),str(b"2004N")]
-    
+            for dt in range(0, len(keyboard[count])):
+                
+                button = keyboard[count][dt]
+
+                voitingButtonVal.append(str(button.data))
+                
 async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
 
     if user[4] == '' and option == "": # Send message to All users
@@ -586,35 +596,55 @@ async def callback(event):
         
         user = cont.GetUserByUName(event.sender.id)
         
-        R = [str(b"2000"),str(b"2001"),str(b"2002"),str(b"2003"),str(b"2004")]
-        
-        N = [str(b"2000N"),str(b"2001N"),str(b"2002N"),str(b"2003N"),str(b"2004N")]
-        
-        if str(event.data) in R:
+        if user[0][4] != "Naato":
             
-            if event.sender.id not in listOfVoite:
+            if "N" not in str(event.data):
+                
+                if event.sender.id not in listOfVoite:
+                
+                    listOfVoite.append(event.sender.id)
+                    
+                    await event.respond("رای شما ثبت شد ⚠️")
+                    
+                else:
+                    
+                    await event.respond("شما یک بار رای داده اید ⚠️")
             
-                listOfVoite.append(event.sender.id)
+            elif "N" in str(event.data):
                 
-                await event.respond("رای شما ثبت شد ⚠️")
+                if event.sender.id not in listOfVoite:
                 
-            else:
-                
-                await event.respond("شما یک بار رای داده اید ⚠️")
-        
-        elif str(event.data) in N:
+                    listOfVoite.append(event.sender.id)
+                    
+                    await event.respond("رای شما ثبت شد ⚠️")
+                    
+                    cont.points(int(event.sender.id))
+                    
+                else:
+                    
+                    await event.respond("شما یک بار رای داده اید ⚠️")
             
-            if event.sender.id not in listOfVoite:
-            
-                listOfVoite.append(event.sender.id)
+        elif user[0][4] == "Naato":
+
+            try:
                 
-                await event.respond("رای شما ثبت شد ⚠️")
+                if len(terminate) == 0:
+                    
+                    if cont.Terminator(int(event.data)) == True:
+                        
+                        terminate.append(1)
+                    
+                        userT = cont.GetUserByUName(int(event.data)) 
+                        
+                        await event.respond(f"شما {userT[0][1]} از بازی حذف کردید. 👹")
+                        
+                else:
+                    
+                    await event.respond("شما یکی رو حذف کردید دیگه راه نداره.")
                 
-                cont.points(int(event.sender.id))
+            except ValueError as err:
                 
-            else:
-                
-                await event.respond("شما یک بار رای داده اید ⚠️")
+                await event.respond(f"قاعدتا خودت رو نمیتونی حظف کنی 😶‍🌫️🤣")
 
 client.start()
 

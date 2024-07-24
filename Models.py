@@ -122,6 +122,22 @@ class Models:
         
         return [userHash, situation]
     
+    def UserTerminator(self, usersID):
+        
+        try:
+        
+            sql = "update `users` set `check` = 0 where `username` = %s" % (usersID)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+            return True
+            
+        except mysql.connector.Error as err:
+            
+            return err
+    
     def GetGroupStatus(self, groupID):
         
         check = False
