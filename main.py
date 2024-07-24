@@ -584,17 +584,35 @@ async def callback(event):
         
     elif str(event.data) in voitingButtonVal:
         
+        user = cont.GetUserByUName(event.sender.id)
+        
         R = [str(b"2000"),str(b"2001"),str(b"2002"),str(b"2003"),str(b"2004")]
         
         N = [str(b"2000N"),str(b"2001N"),str(b"2002N"),str(b"2003N"),str(b"2004N")]
         
         if str(event.data) in R:
             
-            print(event.data, "PEACE SIDE 🎃")
+            if event.sender.id not in listOfVoite:
+            
+                listOfVoite.append(event.sender.id)
+                
+                await event.respond("رای شما ثبت شد ⚠️")
+                
+            else:
+                
+                await event.respond("شما یک بار رای داده اید ⚠️")
         
         elif str(event.data) in N:
             
-            print(event.data, "EVIL SIDE 👺")
+            if event.sender.id not in listOfVoite:
+            
+                listOfVoite.append(event.sender.id)
+                
+                await event.respond("رای شما ثبت شد ⚠️")
+                
+            else:
+                
+                await event.respond("شما یک بار رای داده اید ⚠️")
             
 client.start()
 
