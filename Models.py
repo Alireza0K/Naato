@@ -471,62 +471,6 @@ class Models:
         
         return result
     
-    def Cycle(self, groupID, NaatoID):
-        
-        self.ScoreScope(groupID)
-        
-        sql = "select * from questions where groupID = '%s'" % (groupID)
-        
-        mycursor.execute(sql)
-        
-        questions = mycursor.fetchall()
-        
-        cycleCounter = 0
-        
-        Counter = 0
-        
-        for question in questions:
-            
-            cycleCounter += 1
-            
-            print("\nQuestion is: ▼")
-            
-            print(question[3], "\n")
-            
-            answers = self.ShowAnswers(question[1])
-            
-            count = 0
-            
-            print("Answer is: ▼")
-            
-            for answer in answers:
-                
-                count += 1
-                    
-                print(str(count)+".", answer[2], "\n")
-                    
-            userAnswer = int(input("Choose the correct answer: "))
-            
-            os.system("clear")
-            
-            if answers[userAnswer-1][3] == 1:
-                
-                print("Congratulation, You Select Correct Answer")
-                
-                self.AutoScoreScope(groupID, True)
-                
-            elif answers[userAnswer-1][3] != 1:
-                
-                print("You Select Wrong Answer!!!")
-                
-                self.AutoScoreScope(groupID, False)
-                
-            if cycleCounter == 2:
-                
-                self.ShowFacts(Counter, NaatoID)
-            
-        return True
-    
     def ShowFacts(self, NaatoID):
                 
         sql = "select * from `facts` where userID = '%s' AND `check` = 1" % (NaatoID)
