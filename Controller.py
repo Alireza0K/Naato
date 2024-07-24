@@ -176,6 +176,16 @@ class Controller:
         
         model.FactChecked(factID)
         
+    def points(self,userID):
+        
+        model.Points(userID=userID)
+    
+    def Terminator(self, userID):
+        
+        userT = model.UserTerminator(usersID=userID)
+        
+        return userT
+        
     def GameFirstSection(self, users, group):
         
         for user in users:
