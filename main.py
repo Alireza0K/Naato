@@ -610,10 +610,12 @@ async def callback(event):
                 
                 await event.respond("رای شما ثبت شد ⚠️")
                 
+                cont.points(int(event.sender.id))
+                
             else:
                 
                 await event.respond("شما یک بار رای داده اید ⚠️")
-            
+
 client.start()
 
 client.run_until_disconnected()

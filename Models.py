@@ -98,7 +98,7 @@ class Models:
         
         sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`) VALUES (NULL, %s, %s, %s, %s, %s, %s);"
         
-        points = 15
+        points = 0
         
         userHash = hashlib.md5(str(username).encode()).hexdigest()
         
@@ -602,6 +602,18 @@ class Models:
         self.Cycle(groupID, naatoID)
         
         return True
+    
+    def Points(self, userID):
+        
+        user = self.GetUserByUsername(userID)
+        
+        point = user[0][6]
+        
+        sql = "update `users` set points = '%s' where username = '%s'" % (point + 5, userID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
         
 model = Models()
 

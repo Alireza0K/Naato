@@ -176,6 +176,10 @@ class Controller:
         
         model.FactChecked(factID)
         
+    def points(self,userID):
+        
+        model.Points(userID=userID)
+        
     def GameFirstSection(self, users, group):
         
         for user in users:
