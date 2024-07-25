@@ -199,8 +199,6 @@ async def RB(event):
 
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
     
-    print(listA,"-----", listB,"-----", roundCounter)
-    
     usersinfo = cont.GetUserByUName(event.sender.id)
     
     usersinfo = cont.GetUsersId(usersinfo[0][5])
@@ -225,8 +223,8 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
 
                     keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                     
-        elif len(usersinfo[0]) == 6:
-            print("Hello ---------- Hello - 2")
+        elif len(usersinfo[0]) <= 6:
+
             keyboard = [
                 [],
                 [],
@@ -314,6 +312,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         await client.send_message(int(user[2]), "تبریک میگم تمام اعضای تیم شما تکمیل شد و منتظر شما هستن تا بازی رو شروع کنید.✌️🔥\n\nشما راوی داستان هستید🥳\n\nلطفا به خوبی بازی رو روایت کنید 🎃",buttons=keyboard)
 
     elif option == "score":
+
+        await client.send_message(int(user[2]), text)
+        
+    elif option == "notice":
 
         await client.send_message(int(user[2]), text)
         
@@ -769,6 +771,12 @@ async def callback(event):
                         userT = cont.GetUserByUName(int(event.data)) 
                         
                         await event.respond(f"شما {userT[0][1]} از بازی حذف کردید. 👹")
+                        
+                        users = cont.GetUsersId(userT[0][5])
+                        
+                        Narrator = users[0][0]
+                        
+                        await sendMessage(user=Narrator, option="notice", text=f"{userT[0][1]} حذف شد 💀")
                         
                 else:
                     
