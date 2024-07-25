@@ -19,8 +19,6 @@ cont = Controller("/start")
 
 listOfVoite = []
 
-global voitingButtonVal 
-        
 voitingButtonVal = []
 
 CountFirstRound = []
@@ -30,6 +28,8 @@ FactCounter = []
 terminate = []
 
 roundSet = ["",""]
+
+voite = True
 
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
@@ -199,6 +199,8 @@ async def RB(event):
 
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
     
+    print(listA,"-----", listB,"-----", roundCounter)
+    
     usersinfo = cont.GetUserByUName(event.sender.id)
     
     usersinfo = cont.GetUsersId(usersinfo[0][5])
@@ -224,7 +226,7 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                     keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                     
         elif len(usersinfo[0]) == 6:
-            
+            print("Hello ---------- Hello - 2")
             keyboard = [
                 [],
                 [],
@@ -567,7 +569,7 @@ async def callback(event):
             if user[4] == "Naato":
                 
                 facts = cont.ShowFacts(user[3])
-              
+                     
         FactCounter.append(1)
         
         if roundSet[0] == "first":
@@ -594,7 +596,47 @@ async def callback(event):
                 
                 await client.send_message(event.chat_id, "شما دو سوال خود را پرسیده اید و الان باید **سوال** هارو بپرسید. 🔗")
              
-        await Voite(event,CountFirstRound, FactCounter, [2, 3])
+        if roundSet[0] == "first" and voite == True:
+            
+            if len(FactCounter) > 3:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+            
+            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            
+        elif roundSet[1] == "second" and voite == True:
+            
+            if len(FactCounter) > 2:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+                
+            await Voite(event,CountFirstRound, FactCounter, [2, 2])
         
     elif str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
@@ -639,8 +681,48 @@ async def callback(event):
         elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
                 
             await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
+        
+        if roundSet[0] == "first" and voite == True:
             
-        await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            if len(FactCounter) > 3:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+            
+            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            
+        elif roundSet[1] == "second" and voite == True:
+            
+            if len(FactCounter) > 2:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+                
+            await Voite(event,CountFirstRound, FactCounter, [2, 2])
         
     elif str(event.data) in voitingButtonVal:
         
