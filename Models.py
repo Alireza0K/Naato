@@ -96,7 +96,7 @@ class Models:
             
             return False
         
-        sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`) VALUES (NULL, %s, %s, %s, %s, %s, %s);"
+        sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`,`check`) VALUES (NULL, %s, %s, %s, %s, %s, %s,1);"
         
         points = 0
         
@@ -198,7 +198,7 @@ class Models:
     
     def GetUsersByGroup(self, groupID):
         
-        sql = "select * from `users` where groupID = '%s'" % (groupID)
+        sql = "select * from `users` where groupID = '%s' and `check` = 1" % (groupID)
         
         mycursor.execute(sql)
         
