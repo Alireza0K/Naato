@@ -19,8 +19,6 @@ cont = Controller("/start")
 
 listOfVoite = []
 
-global voitingButtonVal 
-        
 voitingButtonVal = []
 
 CountFirstRound = []
@@ -28,6 +26,10 @@ CountFirstRound = []
 FactCounter = []
 
 terminate = []
+
+roundSet = ["",""]
+
+voite = True
 
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
@@ -142,6 +144,8 @@ async def F(event):
 @client.on(events.NewMessage(pattern="/RA")) # First Cicle of Game 
 async def RA(event):
     
+    roundSet[0] = "first"
+    
     user = event.sender
     
     global findTheUser
@@ -159,7 +163,43 @@ async def RA(event):
         
         await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
 
+@client.on(events.NewMessage(pattern="/RB")) # Second Cicle of Game 
+async def RB(event):
+    
+    listOfVoite.clear()
+    
+    voitingButtonVal.clear()
+
+    CountFirstRound.clear()
+
+    FactCounter.clear()
+
+    terminate.clear()
+    
+    roundSet[0] = ""
+    
+    roundSet[1] = "second"
+    
+    user = event.sender
+    
+    global findTheUser
+    
+    findTheUser = cont.GetUserByUName(user.id)
+    
+    keyboard = [
+        [
+            Button.inline("سوال ها", b"15"),
+            Button.inline("فَکت ها", b"16")  
+        ],
+    ]
+    
+    if findTheUser[0][4] == "narrator":
+        
+        await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃2️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
+
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
+    
+    print(listA,"-----", listB,"-----", roundCounter)
     
     usersinfo = cont.GetUserByUName(event.sender.id)
     
@@ -186,7 +226,7 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                     keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                     
         elif len(usersinfo[0]) == 6:
-            
+            print("Hello ---------- Hello - 2")
             keyboard = [
                 [],
                 [],
@@ -514,7 +554,7 @@ async def callback(event):
 
         else:
 
-            await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی یا این که **فَکت** هارو بپرسید. 🔗")
+            await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی `/RB` یا این که **فَکت** هارو بپرسید. 🔗")
     
     elif event.data == b'16': # This Button is For Facts in Round One
         
@@ -529,68 +569,160 @@ async def callback(event):
             if user[4] == "Naato":
                 
                 facts = cont.ShowFacts(user[3])
-              
+                     
         FactCounter.append(1)
         
-        if len(FactCounter) <= 3:
+        if roundSet[0] == "first":
             
-            await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
+            if len(FactCounter) <= 3:
+                
+                await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
+                
+                cont.FactCheck(facts[0][0])
             
-            cont.FactCheck(facts[0][0])
+            else:
+                
+                await client.send_message(event.chat_id, "شما سه سوال خود را پرسیده اید و الان باید برید **راند** بعدی یا این که **سوال** هارو بپرسید. 🔗")
+        
+        elif roundSet[1] == "second":
             
-        else:
+            if len(FactCounter) <= 2:
+                
+                await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
+                
+                cont.FactCheck(facts[0][0])
             
-            await client.send_message(event.chat_id, "شما سه سوال خود را پرسیده اید و الان باید برید **راند** بعدی یا این که **سوال** هارو بپرسید. 🔗")
+            else:
+                
+                await client.send_message(event.chat_id, "شما دو سوال خود را پرسیده اید و الان باید **سوال** هارو بپرسید. 🔗")
+             
+        if roundSet[0] == "first" and voite == True:
             
-        await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            if len(FactCounter) > 3:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+            
+            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            
+        elif roundSet[1] == "second" and voite == True:
+            
+            if len(FactCounter) > 2:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+                
+            await Voite(event,CountFirstRound, FactCounter, [2, 2])
         
     elif str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         
         users = cont.GetUsersId(findTheUser[0][5])
         
-        # if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
+        if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
                 
-        #     if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
+            if str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F")]:
 
-        #         command=False
+                command=False
                     
-        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
                 
-        #         score = cont.ShowScore(findTheUser[0][5])
+                score = cont.ShowScore(findTheUser[0][5])
                 
-        #         for answer in answers:
+                for answer in answers:
                     
-        #             if answer[3] == 1:
+                    if answer[3] == 1:
                         
-        #                 text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
+                        text = f"جواب اشتباه بود 🥲❌\n\n جواب درست **{answer[2]}**بود.\n\nامتیاز شما **{score[0][1]}** 🥊 "
 
-        #                 for user in users[0]:
+                        for user in users[0]:
 
-        #                     await sendMessage(user=user, option="score", text=text)
+                            await sendMessage(user=user, option="score", text=text)
 
-        #                 cont.CheckedQ(quesionID=question[1])   
+                        cont.CheckedQ(quesionID=question[1])   
                         
-        #     elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
+            elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
     
-        #         cont.CheckedQ(quesionID=question[1])
+                cont.CheckedQ(quesionID=question[1])
                 
-        #         command=True
+                command=True
                 
-        #         cont.ScoreScope(groupID=findTheUser[0][5], command=command)
+                cont.ScoreScope(groupID=findTheUser[0][5], command=command)
                 
-        #         score = cont.ShowScore(findTheUser[0][5])
+                score = cont.ShowScore(findTheUser[0][5])
                 
-        #         for user in users[0]:
+                for user in users[0]:
 
-        #             await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
+                    await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
         
-        # elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
+        elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
                 
-        #     await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
-            
-        # await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
         
-        await Voite(event,[1,1], [1,1,1], [2, 3])
+        if roundSet[0] == "first" and voite == True:
+            
+            if len(FactCounter) > 3:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+            
+            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            
+        elif roundSet[1] == "second" and voite == True:
+            
+            if len(FactCounter) > 2:
+                
+                FactCounter.clear()
+                
+                FactCounter.append(1)
+                
+                FactCounter.append(1)
+                
+            elif len(CountFirstRound) > 2:
+                
+                CountFirstRound.clear()
+                
+                CountFirstRound.append(1)
+                
+                CountFirstRound.append(1)
+                
+            await Voite(event,CountFirstRound, FactCounter, [2, 2])
         
     elif str(event.data) in voitingButtonVal:
         
