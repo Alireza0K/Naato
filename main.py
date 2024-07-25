@@ -199,8 +199,6 @@ async def RB(event):
 
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
     
-    print(listA,"-----", listB,"-----", roundCounter)
-    
     usersinfo = cont.GetUserByUName(event.sender.id)
     
     usersinfo = cont.GetUsersId(usersinfo[0][5])
@@ -226,7 +224,7 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                     keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
                     
         elif len(usersinfo[0]) == 6:
-            print("Hello ---------- Hello - 2")
+
             keyboard = [
                 [],
                 [],
