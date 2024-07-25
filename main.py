@@ -19,6 +19,8 @@ cont = Controller("/start")
 
 listOfVoite = []
 
+Trust = []
+
 voitingButtonVal = []
 
 CountFirstRound = []
@@ -27,7 +29,7 @@ FactCounter = []
 
 terminate = []
 
-roundSet = ["",""]
+roundSet = ["","",""]
 
 voite = True
 
@@ -197,6 +199,41 @@ async def RB(event):
         
         await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃2️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
 
+@client.on(events.NewMessage(pattern="/END"))
+async def END(event):
+
+    listOfVoite.clear()
+    
+    voitingButtonVal.clear()
+
+    CountFirstRound.clear()
+
+    FactCounter.clear()
+
+    terminate.clear()
+    
+    roundSet[0] = ""
+    
+    roundSet[1] = ""
+    
+    roundSet[2] = "FINAL"
+    
+    user = event.sender
+    
+    global findTheUser
+    
+    findTheUser = cont.GetUserByUName(user.id)
+    
+    keyboard = [
+        [
+            Button.inline("آخرین بخش 🎃", b"20")  
+        ],
+    ]
+    
+    if findTheUser[0][4] == "narrator":
+        
+        await client.send_message(event.chat_id,"و این هم از آخر بازی، حالا باید افراد باقی مانده تصمیم بگیرن که کی **ناتو** این بازی هست 🎭😶‍🌫️",buttons=keyboard)
+
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
     
     usersinfo = cont.GetUserByUName(event.sender.id)
@@ -222,7 +259,7 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 elif users[userCount][4] == "Naato":
 
                     keyboard[0].append(Button.inline(users[userCount][1], f"{users[userCount][2]}N"))
-                    
+
         elif len(usersinfo[0]) <= 6:
 
             keyboard = [
@@ -317,6 +354,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         
     elif option == "notice":
 
+        await client.send_message(int(user[2]), text)
+        
+    elif option == "UserWin":
+        
         await client.send_message(int(user[2]), text)
         
 @client.on(events.CallbackQuery())
@@ -730,62 +771,132 @@ async def callback(event):
         
         user = cont.GetUserByUName(event.sender.id)
         
-        if user[0][4] != "Naato":
+        if roundSet[2] != "FINAL":
             
-            if "N" not in str(event.data):
+            if user[0][4] != "Naato":
                 
-                if event.sender.id not in listOfVoite:
+                if "N" not in str(event.data):
+                    
+                    if event.sender.id not in listOfVoite:
+                    
+                        listOfVoite.append(event.sender.id)
+                        
+                        await event.respond("رای شما ثبت شد ⚠️")
+                        
+                    else:
+                        
+                        await event.respond("شما یک بار رای داده اید ⚠️")
                 
-                    listOfVoite.append(event.sender.id)
+                elif "N" in str(event.data):
                     
-                    await event.respond("رای شما ثبت شد ⚠️")
+                    if event.sender.id not in listOfVoite:
                     
-                else:
-                    
-                    await event.respond("شما یک بار رای داده اید ⚠️")
-            
-            elif "N" in str(event.data):
+                        listOfVoite.append(event.sender.id)
+                        
+                        await event.respond("رای شما ثبت شد ⚠️")
+                        
+                        cont.points(int(event.sender.id))
+                        
+                    else:
+                        
+                        await event.respond("شما یک بار رای داده اید ⚠️")
                 
-                if event.sender.id not in listOfVoite:
-                
-                    listOfVoite.append(event.sender.id)
-                    
-                    await event.respond("رای شما ثبت شد ⚠️")
-                    
-                    cont.points(int(event.sender.id))
-                    
-                else:
-                    
-                    await event.respond("شما یک بار رای داده اید ⚠️")
-            
-        elif user[0][4] == "Naato":
+            elif user[0][4] == "Naato":
 
-            try:
-                
-                if len(terminate) == 0:
+                try:
                     
-                    if cont.Terminator(int(event.data)) == True:
+                    if len(terminate) == 0:
                         
-                        terminate.append(1)
+                        if cont.Terminator(int(event.data)) == True:
+                            
+                            terminate.append(1)
+                        
+                            userT = cont.GetUserByUName(int(event.data)) 
+                            
+                            await event.respond(f"شما {userT[0][1]} از بازی حذف کردید. 👹")
+                            
+                            users = cont.GetUsersId(userT[0][5])
+                            
+                            Narrator = users[0][0]
+                            
+                            await sendMessage(user=Narrator, option="notice", text=f"{userT[0][1]} حذف شد 💀")
+                            
+                    else:
+                        
+                        await event.respond("شما یکی رو حذف کردید دیگه راه نداره.")
                     
-                        userT = cont.GetUserByUName(int(event.data)) 
-                        
-                        await event.respond(f"شما {userT[0][1]} از بازی حذف کردید. 👹")
-                        
-                        users = cont.GetUsersId(userT[0][5])
-                        
-                        Narrator = users[0][0]
-                        
-                        await sendMessage(user=Narrator, option="notice", text=f"{userT[0][1]} حذف شد 💀")
-                        
-                else:
+                except ValueError as err:
                     
-                    await event.respond("شما یکی رو حذف کردید دیگه راه نداره.")
+                    await event.respond(f"قاعدتا خودت رو نمیتونی حظف کنی 😶‍🌫️🤣")
+                    
+        elif roundSet[2] == "FINAL":
+            
+            if user[0][4] != "Naato":
                 
-            except ValueError as err:
+                if "N" not in str(event.data):
+                    
+                    if event.sender.id not in listOfVoite:
+                    
+                        listOfVoite.append(event.sender.id)
+                        
+                        await event.respond("رای شما ثبت شد ⚠️")
+                        
+                    else:
+                        
+                        await event.respond("شما یک بار رای داده اید ⚠️")
                 
-                await event.respond(f"قاعدتا خودت رو نمیتونی حظف کنی 😶‍🌫️🤣")
+                elif "N" in str(event.data):
+                    
+                    if event.sender.id not in listOfVoite:
+                    
+                        listOfVoite.append(event.sender.id)
+                        
+                        Trust.append(event.sender.id)
+                        
+                        await event.respond("رای شما ثبت شد ⚠️")
+                        
+                        cont.points(int(event.sender.id))
+                        
+                    else:
+                        
+                        await event.respond("شما یک بار رای داده اید ⚠️")
+                
+            elif user[0][4] == "Naato":
 
+                await client.send_message(int(user[0][2]),"شما دیگه نمیتونی کاری بکنی ❌")
+        
+        userT = cont.GetUserByUName(int(event.sender.id)) 
+        
+        users = cont.GetUsersId(userT[0][5])
+        
+        if len(listOfVoite) == 2:
+        
+            if len(Trust) == 2:
+                
+                for user in users[0]:
+
+                    await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
+                    
+            elif len(Trust) < 2:
+                
+                for user in users[0]:
+
+                    await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+
+    elif event.data == b"20":
+        
+        user = cont.GetUserByUName(event.sender.id)
+        
+        users = cont.GetUsersId(user[0][5])
+        
+        if len(users[0]) == 4:
+            
+            await Voite(event, [1], [1], [1,1])
+            
+        else:
+            
+            await client.send_message(event.chat_id, "هنوز وقتش نشده.")
+    
 client.start()
 
 client.run_until_disconnected()
