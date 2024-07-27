@@ -1,8 +1,6 @@
-<center>
-  
-![Alt Text](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVsNnRkZ2l5NmlxcjQ4OTlpYThzc3J3ZnZieDV6bHhkcTQwM2Z2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c3q3zSXa3Or5JLy8hW/giphy.gif)
-
-</center>
+<p  align="center">
+<img  align="center" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVsNnRkZ2l5NmlxcjQ4OTlpYThzc3J3ZnZieDV6bHhkcTQwM2Z2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c3q3zSXa3Or5JLy8hW/giphy.gif">
+</p>
 <center>
 
 <h1> MADE WITH <br> 👇</h1>
