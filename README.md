@@ -1,19 +1,15 @@
 <p  align="center">
 <img  align="center" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVsNnRkZ2l5NmlxcjQ4OTlpYThzc3J3ZnZieDV6bHhkcTQwM2Z2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c3q3zSXa3Or5JLy8hW/giphy.gif">
 </p>
-<center>
 
-<h1> MADE WITH <br> 👇</h1>
+<h1 align="center"> MADE WITH <br> 👇</h1>
 
-</center>
-<center>
-
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Telethon?style=for-the-badge&logo=python)
-![PyPI - Python Version](https://img.shields.io/badge/Telethon-1.36.0-blue?style=for-the-badge&logo=telegram)
-![.env](https://img.shields.io/badge/ENV-0.1.0-yellow?style=for-the-badge&logo=dotenv)
-![mysql](https://img.shields.io/badge/mysql-8.0.24-orange?style=for-the-badge&logo=mysql)
-
-</center>
+<div align="center" style="">
+<img  src="https://img.shields.io/pypi/pyversions/Telethon?style=for-the-badge&logo=python">
+<img  src="https://img.shields.io/badge/Telethon-1.36.0-blue?style=for-the-badge&logo=telegram"><br>
+<img  style="padding:0px 0px" src="https://img.shields.io/badge/ENV-0.1.0-yellow?style=for-the-badge&logo=dotenv">
+<img style="padding:0px 5px"  src="https://img.shields.io/badge/mysql-8.0.24-orange?style=for-the-badge&logo=mysql">
+</div>
 
 ## Contributors 👺
 - ### [Alireza0K](https://github.com/Alireza0K/) Programmer | 👨‍💻
