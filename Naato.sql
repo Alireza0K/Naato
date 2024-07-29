@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2024 at 01:46 AM
+-- Generation Time: Jul 29, 2024 at 01:37 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.0
 
@@ -43,7 +43,8 @@ CREATE TABLE `Answers` (
 CREATE TABLE `facts` (
   `ID` int NOT NULL,
   `userID` varchar(200) NOT NULL,
-  `text` varchar(250) NOT NULL
+  `text` varchar(250) NOT NULL,
+  `check` tinyint NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -99,7 +100,8 @@ CREATE TABLE `users` (
   `user_Hash` varchar(200) NOT NULL,
   `nickname` varchar(50) NOT NULL,
   `groupID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `points` int NOT NULL
+  `points` int NOT NULL,
+  `check` tinyint NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
