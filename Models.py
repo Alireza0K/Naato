@@ -575,6 +575,68 @@ class Models:
         
         myDB.commit()
         
+    def FetchTheAllMembersOfGroup(self, groupID):
+        
+        sql = "select * from `users` where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        users = mycursor.fetchall()
+        
+        return users
+
+    def ClearTheGroup(self, groupID):
+        
+        users = self.FetchTheAllMembersOfGroup(groupID=groupID)
+        
+        for userID in users:
+        
+            sql = "UPDATE `users` SET `groupID` = NULL where username = '%s'" % (userID[2])
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+    def DeleteTheGroup(self, groupID):
+        
+        sql = "DELETE FROM `groups` WHERE group_Hash = '%s';" % (groupID)
+        
+        mycursor.execute(sql)
+            
+        myDB.commit()     
+            
+    def ToghseThePoint(self, groupID):
+
+        users = self.FetchTheAllMembersOfGroup(groupID=groupID)
+        
+        pointScope = self.ShowScore(groupID=groupID)
+        
+        Toghse = round(pointScope[0][1] / len(users))
+        
+        for userID in users:
+            
+            sql = "update `users` set points = '%s' where username = '%s'" % (userID[6] + Toghse, userID[2])
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+    def NaatoWon(self, groupID):
+    
+        users = self.FetchTheAllMembersOfGroup(groupID=groupID)
+        
+        pointScope = self.ShowScore(groupID=groupID)
+        
+        for user in users:
+            
+            if user[4] == "Naato":
+
+                sql = "update `users` set points = '%s' where username = '%s'" % (user[6] + pointScope[0][1], user[2])
+                
+                mycursor.execute(sql)
+                
+                myDB.commit()  
+                
 model = Models()
 
 fake = Faker()

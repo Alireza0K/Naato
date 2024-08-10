@@ -169,3 +169,17 @@ class Controller:
         userT = model.UserTerminator(usersID=userID)
         
         return userT
+    
+    def EndTheGame(self, groupID, Naato = None):
+        
+        if Naato != None:
+            
+            model.NaatoWon(groupID=groupID) # Give all the points to Naato
+        
+        else:
+            
+            model.ToghseThePoint(groupID=groupID) # Share points equally with the team members
+        
+        model.ClearTheGroup(groupID=groupID) # Reset the group field
+        
+        model.DeleteTheGroup(groupID=groupID) # Deleting the Group table will cascade to the deletion of score_scope, questions, and answers tables
