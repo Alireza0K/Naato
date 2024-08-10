@@ -360,6 +360,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         
         await client.send_message(int(user[2]), text)
         
+    elif option == "ShowPoints":
+        
+        await client.send_message(int(user[0]), text)
+        
 @client.on(events.CallbackQuery())
 async def callback(event):
     if event.data == b'1':
@@ -883,7 +887,11 @@ async def callback(event):
                         
                         await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
                     
-                cont.EndTheGame(groupID=userT[0][5])
+                end = cont.EndTheGame(groupID=userT[0][5])
+                
+                for points in end:
+                    
+                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی {points[3]} میباشد.")
                     
             elif len(Trust) < 2:
                 
@@ -897,7 +905,13 @@ async def callback(event):
                         
                         await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
                     
-                cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
+                end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
+                
+                for points in end:
+                    
+                    print(points)
+                    
+                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
 
     elif event.data == b"20":
         

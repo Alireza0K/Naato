@@ -619,7 +619,7 @@ class Models:
             
             mycursor.execute(sql)
             
-            myDB.commit()
+            myDB.commit() 
             
     def NaatoWon(self, groupID):
     
