@@ -170,6 +170,18 @@ class Controller:
         
         return userT
     
+    def AllUsersPoints(self, groupID):
+
+        users = model.FetchTheAllMembersOfGroup(groupID)
+        
+        usersPoints = []
+        
+        for user in users:
+
+            usersPoints.append([user[2], user[1], user[4], user[6], None])
+            
+        return usersPoints
+    
     def EndTheGame(self, groupID, Naato = None):
         
         if Naato != None:
@@ -180,6 +192,10 @@ class Controller:
             
             model.ToghseThePoint(groupID=groupID) # Share points equally with the team members
         
+        UsersPoints = self.AllUsersPoints(groupID=groupID)
+        
         model.ClearTheGroup(groupID=groupID) # Reset the group field
         
         model.DeleteTheGroup(groupID=groupID) # Deleting the Group table will cascade to the deletion of score_scope, questions, and answers tables
+        
+        return UsersPoints
