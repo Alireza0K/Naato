@@ -874,14 +874,30 @@ async def callback(event):
             if len(Trust) == 2:
                 
                 for user in users[0]:
-
-                    await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
+                    
+                    if user[4] == "Naato":
+                        
+                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+                    
+                    else:
+                        
+                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
+                    
+                cont.EndTheGame(groupID=userT[0][5])
                     
             elif len(Trust) < 2:
                 
                 for user in users[0]:
+                    
+                    if user[4] == "Naato":
+                        
+                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
 
-                    await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+                    else:
+                        
+                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+                    
+                cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
 
     elif event.data == b"20":
         
