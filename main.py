@@ -479,7 +479,7 @@ async def callback(event):
             
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
-    elif event.data == b"9":
+    elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
         
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
         
@@ -498,11 +498,11 @@ async def callback(event):
                 
                 groupID = groupinfo[0][0][1]
                 
-                regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.id)
+                regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
                 
                 try:
                     
-                    if regesterTheUser[1]:
+                    if regesterTheUser:
                         
                         await event.respond(f"شما با موافقیت عضو گروه {groupName}")
                     
@@ -512,11 +512,11 @@ async def callback(event):
                         
                         usersCount = usersinfo[1]
                         
-                        if usersCount == 3:
+                        if usersCount == 6:
                                 
                             check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
                                 
-                            naato = cont.ChooseNaato(groupID)
+                            cont.ChooseNaato(groupID)
                                 
                             if check:
                                 
@@ -961,7 +961,7 @@ async def callback(event):
         
         if len(users[0]) == 4:
             
-            await Voite(event, [1], [1], [1,1])
+            await Voite(event, CountFirstRound, FactCounter, [1, 1])
             
         else:
             

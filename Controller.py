@@ -32,6 +32,12 @@ class Controller:
         
         return user
     
+    def ChangeGroupID(self, userID, newGroup):
+        
+        result = model.ChangeUserGroup(userHash=userID, newGroup=newGroup)
+        
+        return result
+    
     def GetUserByUName(self, username):
         
         user = model.GetUserByUsername(username)

@@ -7,7 +7,7 @@ import datetime
 import random
 import os
 import time
-
+import inspect
 import mysql.connector.errorcode
 
 load_dotenv()
@@ -112,13 +112,13 @@ class Models:
             
         except mysql.connector.Error as err:
             
-            print(err)
+            self.ChangeUserGroup(userHash=username, newGroup=groupID)
+            
+            print(err,"<- from ->", inspect.stack()[0][3])
             
             if err.errno == mysql.connector.errorcode.ER_DUP_ENTRY:
                 
                 situation = False
-                
-                change = self.ChangeUserGroup(userHash, groupID)
         
         return [userHash, situation]
     
@@ -222,13 +222,17 @@ class Models:
     
     def ChangeUserGroup(self, userHash, newGroup):
         
+        check = False
+        
         try:
 
-            sql = "update `users` set groupID = '%s' where user_Hash = '%s'" % (newGroup, userHash)
+            sql = "update `users` set groupID = '%s' where username = '%s'" % (newGroup, userHash)
             
             mycursor.execute(sql)
             
             myDB.commit()
+            
+            check = True
             
         except mysql.connector.Error as err:
             
@@ -236,7 +240,7 @@ class Models:
         
         result = self.GetUserByHash(userHash)
         
-        return result
+        return check
     
     def GetUserByHash(self, userHash):
         
@@ -285,10 +289,6 @@ class Models:
         return naatoHash
     
     def CheckNaato(self, users):
-        
-        for user in users:
-            
-            print(user)
         
         return True
     
