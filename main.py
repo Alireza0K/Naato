@@ -1,5 +1,6 @@
 from telethon.sync import TelegramClient, events, Button
-from telethon import types
+from telethon.tl.functions.channels import GetParticipantsRequest
+from telethon import types, errors
 from dotenv import load_dotenv
 from Controller import Controller
 import os
@@ -16,6 +17,10 @@ Bot_token = os.getenv("Bot_token")
 client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
+
+Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"]
+
+channelValidation = []
 
 listOfVoite = []
 
@@ -36,27 +41,62 @@ voite = True
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
     
-    keyboard = [
-        [  
-            Button.inline("شروع بازی🎮", b"1"), 
-            Button.inline("دعوت از دوستان🫂", b"2")
-        ],
-        [
-            Button.inline("گروه های برتر🐲", b"3"), 
-            Button.inline("شارژ اکانت لازم دارم😵‍💫", b"4")
-        ],
-        [
-            Button.inline("کمک لازم دارم😿", b"5")
+    keyboard = []
+    
+    message = ""
+    
+    eq = len(Channels) - len(channelValidation)
+    
+    if eq == 0:
+        
+        keyboard = [
+            [  
+                Button.inline("شروع بازی🎮", b"1"), 
+                Button.inline("دعوت از دوستان🫂", b"2")
+            ],
+            [
+                Button.inline("گروه های برتر🐲", b"3"), 
+                Button.inline("شارژ اکانت لازم دارم😵‍💫", b"4")
+            ],
+            [
+                Button.inline("کمک لازم دارم😿", b"5")
+            ]
         ]
-    ]
-    
-    global User
-    
-    User = event.sender
-
-    await client.send_message(event.chat_id
-                              ,f"سلام {User.first_name} \n\nبه بازی ناتو خوش اومدی🥳  \nتوی این بازی کلیییی قراره بهت خوش بگذره.  \nبیا باهم گذینه های پایین رو نگاه کنیم 👀 \n\n⚠️اگه نیاز به کمک داشتی |کمک لازم دارم| رو بزن"
+        
+        User = event.sender
+        
+        message = f"سلام {User.first_name} \n\nبه بازی ناتو خوش اومدی🥳  \nتوی این بازی کلیییی قراره بهت خوش بگذره.  \nبیا باهم گذینه های پایین رو نگاه کنیم 👀 \n\n⚠️اگه نیاز به کمک داشتی |کمک لازم دارم| رو بزن"
+        
+        await client.send_message(entity=event.chat_id
+                              ,message=message
                               ,buttons=keyboard)
+        
+    else:
+    
+        for channel in Channels:
+            
+            message = f"{eq} چنل باقی مونده که بهشون جوین بشی بازی رو شروع میکنیم."
+            
+            keyboard.append([Button.url(text="Join to channel ❌",url=channel)])
+        
+            if await is_participant(channel, event.sender.id) == True:
+                
+                channelValidation.append(True)   
+                
+        await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
+                
+async def is_participant(channel, user) -> bool:
+    
+    try:
+        
+        await client.get_permissions(channel, user)
+        
+        return True
+    
+    except errors.UserNotParticipantError:
+        
+        return False
+
 async def help(event):
     
     User = event.sender
@@ -908,8 +948,6 @@ async def callback(event):
                 end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
                 
                 for points in end:
-                    
-                    print(points)
                     
                     await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
 
