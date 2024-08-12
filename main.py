@@ -47,6 +47,10 @@ async def start(event):
     
     eq = len(Channels) - len(channelValidation)
     
+    global User
+    
+    User = event.sender
+    
     if eq == 0:
         
         keyboard = [
@@ -62,9 +66,7 @@ async def start(event):
                 Button.inline("کمک لازم دارم😿", b"5")
             ]
         ]
-        
-        User = event.sender
-        
+
         message = f"سلام {User.first_name} \n\nبه بازی ناتو خوش اومدی🥳  \nتوی این بازی کلیییی قراره بهت خوش بگذره.  \nبیا باهم گذینه های پایین رو نگاه کنیم 👀 \n\n⚠️اگه نیاز به کمک داشتی |کمک لازم دارم| رو بزن"
         
         await client.send_message(entity=event.chat_id
