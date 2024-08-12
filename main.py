@@ -18,23 +18,23 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
-Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"]
+Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"] # Channels Adds list
 
-channelValidation = []
+channelValidation = [] # For user Adds Validation
 
-listOfVoite = []
+listOfVoite = [] # List of voite for choosing the Naato
 
-Trust = []
+Trust = [] # I DONT KNOW WTF
 
-voitingButtonVal = []
+voitingButtonVal = [] # Validation of voite list
 
-CountFirstRound = []
+CountFirstRound = [] 
 
 FactCounter = []
 
 terminate = []
 
-roundSet = ["","",""]
+roundSet = ["","",""] # THIS IS SO IMPORTANT * its the round seter ["firstround" "secondround" "Final"] 
 
 voite = True
 
