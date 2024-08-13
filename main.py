@@ -34,6 +34,8 @@ FactCounter = []
 
 terminate = []
 
+countOfAsign = [] # FUCK to functional programming. this var is for counting of users register in a Group.
+
 roundSet = ["","",""] # THIS IS SO IMPORTANT * its the round seter ["firstround" "secondround" "Final"] 
 
 voite = True
@@ -482,55 +484,59 @@ async def callback(event):
     elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
         
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
-        
-        @client.on(events.NewMessage)
-        async def handler(event):
+
+        if len(countOfAsign) == 0:
             
-            MInfo = str(event.message.message)
-            
-            User = event.sender
+            @client.on(events.NewMessage())
+            async def AddToGroup(event):
                 
-            groupinfo = cont.GetGroupInformation(MInfo)
+                countOfAsign.append(1)
                 
-            if groupinfo != None and len(MInfo) > 20:
+                MInfo = str(event.message.message)
+                
+                User = event.sender
                     
-                groupName = groupinfo[0][0][2]
-                
-                groupID = groupinfo[0][0][1]
-                
-                regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
-                
-                try:
+                groupinfo = cont.GetGroupInformation(MInfo)
                     
-                    if regesterTheUser:
+                if groupinfo != None and len(MInfo) > 20:
                         
-                        await event.respond(f"شما با موافقیت عضو گروه {groupName}")
+                    groupName = groupinfo[0][0][2]
                     
-                        usersinfo = cont.GetUsersId(groupID)
+                    groupID = groupinfo[0][0][1]
+                    
+                    regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
+                    
+                    try:
                         
-                        users = usersinfo[0]
+                        if regesterTheUser:
+                            
+                            await client.send_message(entity=event.chat_id,message=f"شما با موافقیت عضو گروه {groupName}")
                         
-                        usersCount = usersinfo[1]
-                        
-                        if usersCount == 6:
-                                
-                            check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                                
-                            cont.ChooseNaato(groupID)
-                                
-                            if check:
-                                
-                                usersinfo = cont.GetUsersId(groupID)
-                        
-                                users = usersinfo[0]
-                                
-                                for user in users:
+                            usersinfo = cont.GetUsersId(groupID)
+                            
+                            users = usersinfo[0]
+                            
+                            usersCount = usersinfo[1]
+                            
+                            if usersCount == 6:
                                     
-                                    await sendMessage(user) # Sending messsage to all user
+                                check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
                                     
-                except TypeError:
-                    
-                    print(TypeError) 
+                                cont.ChooseNaato(groupID)
+                                    
+                                if check == True:
+                                    
+                                    usersinfo = cont.GetUsersId(groupID)
+                            
+                                    users = usersinfo[0]
+                                    
+                                    for user in users:
+                                        
+                                        await sendMessage(user) # Sending messsage to all user
+                                        
+                    except TypeError:
+                        
+                        print(TypeError) 
                         
     elif event.data == b"10":
         
