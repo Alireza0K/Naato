@@ -471,11 +471,11 @@ async def callback(event):
         
         regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.id)
         
-        if regesterTheUser[1] == False:
+        if regesterTheUser[0] == False:
             
             await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
         
-        elif regesterTheUser[1] == True:
+        elif regesterTheUser[0] == True:
             
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
