@@ -47,13 +47,11 @@ async def start(event):
     
     message = ""
     
-    eq = len(Channels) - len(channelValidation)
-    
     global User
     
     User = event.sender
     
-    if eq == 0:
+    if await Adds(Channels, event.sender.id) == True:
         
         keyboard = [
             [  
@@ -73,19 +71,17 @@ async def start(event):
         
         await client.send_message(entity=event.chat_id
                               ,message=message
-                              ,buttons=keyboard)
+                              ,buttons=keyboard)  
         
     else:
-    
+
         for channel in Channels:
             
-            message = f"{eq} چنل باقی مونده که بهشون جوین بشی بازی رو شروع میکنیم."
+            message = f"{len(Channels)} چنل باقی مونده که بهشون جوین بشی بازی رو شروع میکنیم."
             
-            keyboard.append([Button.url(text="Join to channel ❌",url=channel)])
-        
-            if await is_participant(channel, event.sender.id) == True:
-                
-                channelValidation.append(True)   
+            text = f"Join to channel {channel.replace('https://t.me/','')} ✅"
+            
+            keyboard.append([Button.url(text=text,url=channel)])
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
                 
@@ -100,6 +96,24 @@ async def is_participant(channel, user) -> bool:
     except errors.UserNotParticipantError:
         
         return False
+    
+async def Adds(channels, userID):
+    
+    approve = []
+    
+    check = False
+    
+    for channel in channels:
+        
+        if await is_participant(channel=channel, user=userID):
+            
+            approve.append(True)
+            
+    if len(channels) == len(approve):
+        
+        check = True
+        
+    return check        
 
 async def help(event):
     
