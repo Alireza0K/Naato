@@ -18,23 +18,25 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
-Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"]
+Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"] # Channels Adds list
 
-channelValidation = []
+channelValidation = [] # For user Adds Validation
 
-listOfVoite = []
+listOfVoite = [] # List of voite for choosing the Naato
 
-Trust = []
+Trust = [] # I DONT KNOW WTF
 
-voitingButtonVal = []
+voitingButtonVal = [] # Validation of voite list
 
-CountFirstRound = []
+CountFirstRound = [] 
 
 FactCounter = []
 
 terminate = []
 
-roundSet = ["","",""]
+countOfAsign = [] # FUCK to functional programming. this var is for counting of users register in a Group.
+
+roundSet = ["","",""] # THIS IS SO IMPORTANT * its the round seter ["firstround" "secondround" "Final"] 
 
 voite = True
 
@@ -45,9 +47,11 @@ async def start(event):
     
     message = ""
     
-    eq = len(Channels) - len(channelValidation)
+    global User
     
-    if eq == 0:
+    User = event.sender
+    
+    if await Adds(Channels, event.sender.id) == True:
         
         keyboard = [
             [  
@@ -62,26 +66,22 @@ async def start(event):
                 Button.inline("کمک لازم دارم😿", b"5")
             ]
         ]
-        
-        User = event.sender
-        
+
         message = f"سلام {User.first_name} \n\nبه بازی ناتو خوش اومدی🥳  \nتوی این بازی کلیییی قراره بهت خوش بگذره.  \nبیا باهم گذینه های پایین رو نگاه کنیم 👀 \n\n⚠️اگه نیاز به کمک داشتی |کمک لازم دارم| رو بزن"
         
         await client.send_message(entity=event.chat_id
                               ,message=message
-                              ,buttons=keyboard)
+                              ,buttons=keyboard)  
         
     else:
-    
+
         for channel in Channels:
             
-            message = f"{eq} چنل باقی مونده که بهشون جوین بشی بازی رو شروع میکنیم."
+            message = f"{len(Channels)} چنل باقی مونده که بهشون جوین بشی بازی رو شروع میکنیم."
             
-            keyboard.append([Button.url(text="Join to channel ❌",url=channel)])
-        
-            if await is_participant(channel, event.sender.id) == True:
-                
-                channelValidation.append(True)   
+            text = f"Join to channel {channel.replace('https://t.me/','')} ✅"
+            
+            keyboard.append([Button.url(text=text,url=channel)])
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
                 
@@ -96,6 +96,24 @@ async def is_participant(channel, user) -> bool:
     except errors.UserNotParticipantError:
         
         return False
+    
+async def Adds(channels, userID):
+    
+    approve = []
+    
+    check = False
+    
+    for channel in channels:
+        
+        if await is_participant(channel=channel, user=userID):
+            
+            approve.append(True)
+            
+    if len(channels) == len(approve):
+        
+        check = True
+        
+    return check        
 
 async def help(event):
     
@@ -469,66 +487,70 @@ async def callback(event):
         
         regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.id)
         
-        if regesterTheUser[1] == False:
+        if regesterTheUser[0] == False:
             
             await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
         
-        elif regesterTheUser[1] == True:
+        elif regesterTheUser[0] == True:
             
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
-    elif event.data == b"9":
+    elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
         
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
-        
-        @client.on(events.NewMessage)
-        async def handler(event):
+
+        if len(countOfAsign) == 0:
             
-            MInfo = str(event.message.message)
-            
-            User = event.sender
+            @client.on(events.NewMessage())
+            async def AddToGroup(event):
                 
-            groupinfo = cont.GetGroupInformation(MInfo)
+                countOfAsign.append(1)
                 
-            if groupinfo != None and len(MInfo) > 20:
+                MInfo = str(event.message.message)
+                
+                User = event.sender
                     
-                groupName = groupinfo[0][0][2]
-                
-                groupID = groupinfo[0][0][1]
-                
-                regesterTheUser = cont.GetUserInformation(event.message.message, name = User.first_name, username = User.id)
-                
-                try:
+                groupinfo = cont.GetGroupInformation(MInfo)
                     
-                    if regesterTheUser[1]:
+                if groupinfo != None and len(MInfo) > 20:
                         
-                        await event.respond(f"شما با موافقیت عضو گروه {groupName}")
+                    groupName = groupinfo[0][0][2]
                     
-                        usersinfo = cont.GetUsersId(groupID)
+                    groupID = groupinfo[0][0][1]
+                    
+                    regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
+                    
+                    try:
                         
-                        users = usersinfo[0]
+                        if regesterTheUser:
+                            
+                            await client.send_message(entity=event.chat_id,message=f"شما با موافقیت عضو گروه {groupName}")
                         
-                        usersCount = usersinfo[1]
-                        
-                        if usersCount == 3:
-                                
-                            check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                                
-                            naato = cont.ChooseNaato(groupID)
-                                
-                            if check:
-                                
-                                usersinfo = cont.GetUsersId(groupID)
-                        
-                                users = usersinfo[0]
-                                
-                                for user in users:
+                            usersinfo = cont.GetUsersId(groupID)
+                            
+                            users = usersinfo[0]
+                            
+                            usersCount = usersinfo[1]
+                            
+                            if usersCount == 6:
                                     
-                                    await sendMessage(user) # Sending messsage to all user
+                                check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
                                     
-                except TypeError:
-                    
-                    print(TypeError) 
+                                cont.ChooseNaato(groupID)
+                                    
+                                if check == True:
+                                    
+                                    usersinfo = cont.GetUsersId(groupID)
+                            
+                                    users = usersinfo[0]
+                                    
+                                    for user in users:
+                                        
+                                        await sendMessage(user) # Sending messsage to all user
+                                        
+                    except TypeError:
+                        
+                        print(TypeError) 
                         
     elif event.data == b"10":
         
@@ -959,7 +981,7 @@ async def callback(event):
         
         if len(users[0]) == 4:
             
-            await Voite(event, [1], [1], [1,1])
+            await Voite(event, CountFirstRound, FactCounter, [1, 1])
             
         else:
             

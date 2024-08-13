@@ -7,7 +7,7 @@ import datetime
 import random
 import os
 import time
-
+import inspect
 import mysql.connector.errorcode
 
 load_dotenv()
@@ -90,38 +90,52 @@ class Models:
         
         situation = True
         
+        checkUser = self.CheckUser(userID=username)
+        
         self.TrueStatus(groupID)
         
         if check != True:
             
             return False
         
-        sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`,`check`) VALUES (NULL, %s, %s, %s, %s, %s, %s,1);"
-        
-        points = 0
-        
-        userHash = hashlib.md5(str(username).encode()).hexdigest()
-        
-        values = (name, username, userHash, "", groupID, points)
-        
-        try:
+        elif checkUser == False:
             
+            sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`,`check`) VALUES (NULL, %s, %s, %s, %s, %s, %s,1);"
+            
+            points = 0
+            
+            userHash = hashlib.md5(str(username).encode()).hexdigest()
+            
+            values = (name, username, userHash, "", groupID, points)
+                
             mycursor.execute(sql, values)
-            
+                
             myDB.commit()
             
-        except mysql.connector.Error as err:
+        elif checkUser == True:
             
-            print(err)
+            situation = False
             
-            if err.errno == mysql.connector.errorcode.ER_DUP_ENTRY:
-                
-                situation = False
-                
-                change = self.ChangeUserGroup(userHash, groupID)
+            self.ChangeUserGroup(userHash=username, newGroup=groupID)
         
-        return [userHash, situation]
+        return [situation]
     
+    def CheckUser(self, userID):
+        
+        check = False
+        
+        sql = "SELECT * FROM `users` WHERE username = %s" % (userID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
+        
+        if len(result) != 0:
+            
+            check = True
+
+        return check
+        
     def UserTerminator(self, usersID):
         
         try:
@@ -166,7 +180,7 @@ class Models:
         
         check = False
         
-        value = (groupID)
+        value = str(groupID)
         
         sql = ("SELECT * FROM `groups` WHERE group_Hash = '%s'" % (value))
         
@@ -222,13 +236,17 @@ class Models:
     
     def ChangeUserGroup(self, userHash, newGroup):
         
+        check = False
+        
         try:
 
-            sql = "update `users` set groupID = '%s' where user_Hash = '%s'" % (newGroup, userHash)
+            sql = "update `users` set groupID = '%s' where username = '%s'" % (newGroup, userHash)
             
             mycursor.execute(sql)
             
             myDB.commit()
+            
+            check = True
             
         except mysql.connector.Error as err:
             
@@ -236,7 +254,7 @@ class Models:
         
         result = self.GetUserByHash(userHash)
         
-        return result
+        return check
     
     def GetUserByHash(self, userHash):
         
@@ -285,10 +303,6 @@ class Models:
         return naatoHash
     
     def CheckNaato(self, users):
-        
-        for user in users:
-            
-            print(user)
         
         return True
     
