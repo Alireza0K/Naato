@@ -305,7 +305,9 @@ async def END(event):
     
     keyboard = [
         [
-            Button.inline("آخرین بخش 🎃", b"20")  
+            Button.inline("سوال ها", b"15"),
+            Button.inline("فَکت ها", b"16"),
+            Button.inline("آخرین بخش 🎃", b"20")   
         ],
     ]
     
@@ -448,7 +450,7 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         await client.send_message(int(user[0]), text)
         
 @client.on(events.CallbackQuery())
-async def callback(event, CountFirstRound = CountFirstRound):
+async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactCounter):
     
     print("from -", inspect.stack()[0][3])
     
@@ -520,13 +522,11 @@ async def callback(event, CountFirstRound = CountFirstRound):
         regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = int(User.id))
         
         if regesterTheUser[0] == False:
-            print(regesterTheUser[0])
             
             await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
         
         elif regesterTheUser[0] == True:
-            print(regesterTheUser[0])
-            
+
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
     elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
@@ -573,13 +573,11 @@ async def callback(event, CountFirstRound = CountFirstRound):
                             users = usersinfo[0]
                             
                             usersCount = usersinfo[1]
-                            
-                            print(usersCount)
-                            
+                                                        
                             if usersCount == 6:
                                     
                                 check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                                print(check)
+
                                 cont.ChooseNaato(groupID)
                                     
                                 if check == True:
@@ -687,34 +685,86 @@ async def callback(event, CountFirstRound = CountFirstRound):
         global answers
 
         keyboard = []
-
-        if len(CountFirstRound) < 2:
+        
+        if roundSet[0] == "first":
             
-            CountFirstRound.append(1)
-            
-            print(len(CountFirstRound), CountFirstRound)
-            
-            question = cont.ShowQuestion(groupID=findTheUser[0][5])
+            if len(CountFirstRound) < 2:
+                
+                CountFirstRound.append(1)
+                
+                question = cont.ShowQuestion(groupID=findTheUser[0][5])
 
-            answers = cont.ShowAnswers(questionID=question[1])
+                answers = cont.ShowAnswers(questionID=question[1])
 
-            for count in range(0, len(answers)):
+                for count in range(0, len(answers)):
 
-                if answers[count][3] == 0:
+                    if answers[count][3] == 0:
 
-                    keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
 
-                elif answers[count][3] == 1:
+                    elif answers[count][3] == 1:
 
-                    keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
-                    
-            await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
+                        
+                await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+                
+            else:
 
-        else:
-
-            await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی `/RB` یا این که **فَکت** هارو بپرسید. 🔗")
+                await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی `/RB` یا این که **فَکت** هارو بپرسید. 🔗")
     
-    elif event.data == b'16': # This Button is For Facts in Round One
+        elif roundSet[1] == "second":
+                
+            if len(CountFirstRound) < 1:
+                
+                CountFirstRound.append(1)
+                
+                question = cont.ShowQuestion(groupID=findTheUser[0][5])
+
+                answers = cont.ShowAnswers(questionID=question[1])
+
+                for count in range(0, len(answers)):
+
+                    if answers[count][3] == 0:
+
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
+
+                    elif answers[count][3] == 1:
+
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
+                        
+                await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+                
+            else:
+
+                await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی `/RB` یا این که **فَکت** هارو بپرسید. 🔗")
+        
+        elif roundSet[2] == "FINAL":
+                
+            if len(CountFirstRound) < 1:
+                
+                CountFirstRound.append(1)
+                
+                question = cont.ShowQuestion(groupID=findTheUser[0][5])
+
+                answers = cont.ShowAnswers(questionID=question[1])
+
+                for count in range(0, len(answers)):
+
+                    if answers[count][3] == 0:
+
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}F")])
+
+                    elif answers[count][3] == 1:
+
+                        keyboard.append([Button.inline(answers[count][2], f"100{count}T")])
+                        
+                await sendMessage(findTheUser[0], option="poll", text=question[3], keyboard=keyboard)
+                
+            else:
+
+                await client.send_message(event.chat_id, "شما دوبار سوال و جواب کردید و الان باید برید **راند** بعدی `/RB` یا این که **فَکت** هارو بپرسید. 🔗")
+        
+    elif event.data == b"16": # This Button is For Facts in Round One
         
         voite = False
         
@@ -762,38 +812,65 @@ async def callback(event, CountFirstRound = CountFirstRound):
             
             else:
                 
-                await client.send_message(event.chat_id, "شما دو سوال خود را پرسیده اید و الان باید **سوال** هارو بپرسید. 🔗")
-             
+                await client.send_message(event.chat_id, "شما دو سوال خود را پرسیده اید و الان باید **فکت** هارو بپرسید یا این که `/END`. 🔗")
+        
+        elif roundSet[2] == "FINAL":
+            
+            print(facts)
+            
+            if len(FactCounter) <= 1:
+                
+                await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
+                
+                cont.FactCheck(facts[0][0])
+
+                if len(FactCounter) == 1:
+                    
+                    voite = True                          
+            
+            else:
+                
+                await client.send_message(event.chat_id, "شما دو سوال خود را پرسیده اید و الان باید **فکت** هارو بپرسید یا این که `/END`. 🔗")
+                  
         if roundSet[0] == "first" and voite == True:
             
             if len(FactCounter) > 2:
                 
-                CountFirstRound = [1,1]
+                FactCounter = [1,1]
                 
             elif len(CountFirstRound) > 2:
                 
                 CountFirstRound = [1,1]
-            
-            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True - FROM FACTS")
-            
+                        
             await Voite(event,CountFirstRound, FactCounter, [2, 2]) 
             
         elif roundSet[1] == "second" and voite == True:
             
             if len(FactCounter) > 2:
                 
-                CountFirstRound = [1,1]
+                FactCounter = [1,1]
                 
-            elif len(CountFirstRound) > 2:
+            elif len(CountFirstRound) > 1:
                 
-                CountFirstRound = [1,1]
+                CountFirstRound = [1]
                 
-            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True")
+            await Voite(event,CountFirstRound, FactCounter, [1, 2])
+
+        elif roundSet[1] == "FINAL" and voite == True:
+            
+            if len(FactCounter) > 1:
                 
-            await Voite(event,CountFirstRound, FactCounter, [2, 2])
+                FactCounter = [1]
+                
+            elif len(CountFirstRound) > 1:
+                
+                CountFirstRound = [1]
+                
+            await Voite(event,CountFirstRound, FactCounter, [1, 1])
         
     elif str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
         voite = False
+        
         users = cont.GetUsersId(findTheUser[0][5])
         
         if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
@@ -841,46 +918,40 @@ async def callback(event, CountFirstRound = CountFirstRound):
             await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
         
         if roundSet[0] == "first" and voite == True:
-            
+
             if len(FactCounter) > 2:
                 
-                FactCounter.clear()
-                
-                FactCounter.append(1)
-                
-                FactCounter.append(1)
+                FactCounter = [1,1]
                 
             elif len(CountFirstRound) > 2:
                 
-                CountFirstRound.clear()
-                
-                CountFirstRound.append(1)
-                
-                CountFirstRound.append(1)
-                
-            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True FROM Q&A")
-            
+                CountFirstRound = [1,1]
+                            
             await Voite(event,CountFirstRound, FactCounter, [2, 2])
             
         elif roundSet[1] == "second" and voite == True:
             
             if len(FactCounter) > 2:
                 
-                FactCounter.clear()
+                FactCounter = [1,1]
                 
-                FactCounter.append(1)
+            elif len(CountFirstRound) > 1:
                 
-                FactCounter.append(1)
+                CountFirstRound = [1]
                 
-            elif len(CountFirstRound) > 2:
+            await Voite(event,CountFirstRound, FactCounter, [1, 2])
+            
+        elif roundSet[1] == "FINAL" and voite == True:
+            
+            if len(FactCounter) > 1:
                 
-                CountFirstRound.clear()
+                FactCounter = [1]
                 
-                CountFirstRound.append(1)
+            elif len(CountFirstRound) > 1:
                 
-                CountFirstRound.append(1)
+                CountFirstRound = [1]
                 
-            await Voite(event,CountFirstRound, FactCounter, [2, 2])
+            await Voite(event,CountFirstRound, FactCounter, [1, 1])
         
     elif str(event.data) in voitingButtonVal:
         
