@@ -284,27 +284,43 @@ class Models:
         
         result = mycursor.fetchall()
         
-        self.CheckNaato(users=result)
+        check = self.CheckNaato(users=result)
         
-        usersLen = len(result)
+        if check:
         
-        choose = random.randint(0, (usersLen - 1))
-        
-        user = result[choose][0]
-        
-        naatoHash = result[choose][3]
-        
-        sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
-        
-        mycursor.execute(sql)
-        
-        myDB.commit()        
+            usersLen = len(result)
+            
+            choose = random.randint(0, (usersLen - 1))
+            
+            user = result[choose][0]
+            
+            naatoHash = result[choose][3]
+            
+            sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()        
 
-        return naatoHash
+            return naatoHash
+        
+        else:
+            
+            return check
     
     def CheckNaato(self, users):
         
-        return True
+        check = True
+        
+        for user in users:
+            
+            if user[4] == "Naato":
+            
+                check = False
+        
+        print("from -", inspect.stack()[0][3])
+        
+        return check
     
     def GetFacts(self, userID, fact):
         
@@ -406,7 +422,7 @@ class Models:
         
         checkA = self.CheckAnswers(question_Hash)
         
-        if checkA:
+        if checkA[0]:
         
             sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
 
@@ -425,6 +441,8 @@ class Models:
         
         check = True
         
+        lenght = 0
+        
         sql = "select * from Answers where questionID = '%s'" % (question_Hash)
         
         mycursor.execute(sql)
@@ -435,7 +453,9 @@ class Models:
             
             check = False
             
-        return check 
+            lenght = len(answers)
+            
+        return [check, lenght] 
     
     def ShowQuestionsAndAnswers(self, groupID):
         

@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from Controller import Controller
 import os
 import logging
+import inspect # this  lib help me to find where is the bugs.
 
 load_dotenv()
 
@@ -28,7 +29,7 @@ Trust = [] # I DONT KNOW WTF
 
 voitingButtonVal = [] # Validation of voite list
 
-CountFirstRound = [] 
+CountFirstRound = [] # This Function is the count of Q&A
 
 FactCounter = []
 
@@ -38,10 +39,12 @@ countOfAsign = [] # FUCK to functional programming. this var is for counting of 
 
 roundSet = ["","",""] # THIS IS SO IMPORTANT * its the round seter ["firstround" "secondround" "Final"] 
 
-voite = True
+voite = False
 
 @client.on(events.NewMessage(pattern="/start")) # this section work for statrting the game
 async def start(event):
+    
+    print("from -", inspect.stack()[0][3])
     
     keyboard = []
     
@@ -87,6 +90,8 @@ async def start(event):
                 
 async def is_participant(channel, user) -> bool:
     
+    print("from -", inspect.stack()[0][3])
+    
     try:
         
         await client.get_permissions(channel, user)
@@ -98,6 +103,8 @@ async def is_participant(channel, user) -> bool:
         return False
     
 async def Adds(channels, userID):
+    
+    print("from -", inspect.stack()[0][3])
     
     approve = []
     
@@ -117,6 +124,8 @@ async def Adds(channels, userID):
 
 async def help(event):
     
+    print("from -", inspect.stack()[0][3])
+    
     User = event.sender
     
     keyboard = [
@@ -132,6 +141,8 @@ async def help(event):
     
 @client.on(events.NewMessage(pattern="/F")) # This Section is for Geting Facts from users
 async def F(event):
+    
+    print("from -", inspect.stack()[0][3])
     
     user = event.sender.id
         
@@ -161,11 +172,15 @@ async def F(event):
                         
             await event.respond("تعداد فکت های شما بیشتر از حد مجاز بود.😵‍💫")
                         
-        elif len(facts) == 5:
+        elif len(facts) == 5 and user[0][4] == "Naato":
                         
             await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
                         
             ApplyFacts = cont.GetFactsFromEachUser(user[0][3], facts=facts)
+            
+        elif len(facts) == 5 and user[0][4] != "Naato":
+                        
+            await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
                         
         elif len(facts) < 5:
                         
@@ -204,6 +219,8 @@ async def F(event):
 @client.on(events.NewMessage(pattern="/RA")) # First Cicle of Game 
 async def RA(event):
     
+    print("from -", inspect.stack()[0][3])
+    
     roundSet[0] = "first"
     
     user = event.sender
@@ -225,6 +242,8 @@ async def RA(event):
 
 @client.on(events.NewMessage(pattern="/RB")) # Second Cicle of Game 
 async def RB(event):
+    
+    print("from -", inspect.stack()[0][3])
     
     listOfVoite.clear()
     
@@ -259,6 +278,8 @@ async def RB(event):
 
 @client.on(events.NewMessage(pattern="/END"))
 async def END(event):
+    
+    print("from -", inspect.stack()[0][3])
 
     listOfVoite.clear()
     
@@ -293,6 +314,8 @@ async def END(event):
         await client.send_message(event.chat_id,"و این هم از آخر بازی، حالا باید افراد باقی مانده تصمیم بگیرن که کی **ناتو** این بازی هست 🎭😶‍🌫️",buttons=keyboard)
 
 async def Voite(event,listA, listB, roundCounter = []): # This Section Make The VOITED.
+    
+    print("from -", inspect.stack()[0][3])
     
     usersinfo = cont.GetUserByUName(event.sender.id)
     
@@ -376,6 +399,8 @@ async def Voite(event,listA, listB, roundCounter = []): # This Section Make The 
                 
 async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masseging Function
 
+    print("from -", inspect.stack()[0][3])
+    
     if user[4] == '' and option == "": # Send message to All users
         
         await client.send_message(int(user[2]), "تمام اعضای تیم جمع شدن و الان میخوایم بازی رو شروع کنیم.\n\nحالا شما قراره که fact های خودتون رو به شکل زیر وارد کنید:\n```/F \nفکت اول\nفکت دوم\nفکت سوم\nفکت چهارم\nفکت پنجم```\nاین هم از دستور `/F` فکت")
@@ -423,7 +448,10 @@ async def sendMessage(user, option="", poll=None, keyboard=[], text=""): # Masse
         await client.send_message(int(user[0]), text)
         
 @client.on(events.CallbackQuery())
-async def callback(event):
+async def callback(event, CountFirstRound = CountFirstRound):
+    
+    print("from -", inspect.stack()[0][3])
+    
     if event.data == b'1':
         
         keyBoard = [
@@ -458,6 +486,8 @@ async def callback(event):
         @client.on(events.NewMessage)
         async def handler(event):
             
+            print("from -", inspect.stack()[0][3])
+            
             User = event.sender
             
             if User.username != None:
@@ -485,40 +515,52 @@ async def callback(event):
         
         id = cont.Start(0)
         
-        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.id)
+        User = event.sender # locals Sender User.
+        
+        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = int(User.id))
         
         if regesterTheUser[0] == False:
+            print(regesterTheUser[0])
             
             await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
         
         elif regesterTheUser[0] == True:
+            print(regesterTheUser[0])
             
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
     elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
-        
+        User = event.sender # locals Sender User.
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
 
         if len(countOfAsign) == 0:
             
-            @client.on(events.NewMessage())
+            @client.on(events.NewMessage()) # BUUUUUUUUUUG
             async def AddToGroup(event):
+                
+                print("from -", inspect.stack()[0][3])
+                
+                User = event.sender # locals Sender User.
                 
                 countOfAsign.append(1)
                 
                 MInfo = str(event.message.message)
                 
                 User = event.sender
-                    
+                
                 groupinfo = cont.GetGroupInformation(MInfo)
                     
                 if groupinfo != None and len(MInfo) > 20:
                         
                     groupName = groupinfo[0][0][2]
                     
-                    groupID = groupinfo[0][0][1]
+                    groupID = groupinfo[0][0][1] # Bug here 👇
                     
-                    regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
+                    id = User.id
+                    
+                    usernnnn = User.first_name
+                    
+                    regesterTheUser = cont.GetUserInformation(groupID=MInfo, name = usernnnn, username = str(id))
                     
                     try:
                         
@@ -532,10 +574,12 @@ async def callback(event):
                             
                             usersCount = usersinfo[1]
                             
+                            print(usersCount)
+                            
                             if usersCount == 6:
                                     
                                 check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                                    
+                                print(check)
                                 cont.ChooseNaato(groupID)
                                     
                                 if check == True:
@@ -558,6 +602,8 @@ async def callback(event):
         
         @client.on(events.NewMessage(pattern="/Q"))
         async def Q(event):
+            
+            print("from -", inspect.stack()[0][3])
             
             user = event.sender.id
             
@@ -590,6 +636,8 @@ async def callback(event):
             @client.on(events.NewMessage(pattern="/A"))
             async def A(event):
                 
+                print("from -", inspect.stack()[0][3])
+                
                 answers = str(event.message.message)
             
                 answers = answers.replace("/A", "")
@@ -616,7 +664,6 @@ async def callback(event):
                 
                 for answer in answers:
                     
-                    
                     if len(answer) == 2:
                         
                         applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
@@ -625,11 +672,11 @@ async def callback(event):
                         
                         applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
                         
-                if applyAnswers:    
+                if applyAnswers[0] == True and applyAnswers[1] < 4:    
         
                     await event.respond("جواب شما ثبت شد.")
                 
-                else:
+                elif applyAnswers[0] == False and applyAnswers[1] == 4:
                     
                     await event.respond("چهار جواب شما ثبت شده.")
     
@@ -638,12 +685,14 @@ async def callback(event):
         global question
                 
         global answers
-                
-        CountFirstRound.append(1)
 
         keyboard = []
 
-        if len(CountFirstRound) <= 2:
+        if len(CountFirstRound) < 2:
+            
+            CountFirstRound.append(1)
+            
+            print(len(CountFirstRound), CountFirstRound)
             
             question = cont.ShowQuestion(groupID=findTheUser[0][5])
 
@@ -667,6 +716,8 @@ async def callback(event):
     
     elif event.data == b'16': # This Button is For Facts in Round One
         
+        voite = False
+        
         facts = []
         
         nuser = cont.GetUserByUName(event.sender.id)
@@ -683,11 +734,15 @@ async def callback(event):
         
         if roundSet[0] == "first":
             
-            if len(FactCounter) <= 3:
+            if len(FactCounter) <= 2:
                 
                 await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
                 
                 cont.FactCheck(facts[0][0])
+                
+                if len(FactCounter) == 2:
+                    
+                    voite = True
             
             else:
                 
@@ -700,6 +755,10 @@ async def callback(event):
                 await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
                 
                 cont.FactCheck(facts[0][0])
+
+                if len(FactCounter) == 2:
+                    
+                    voite = True                          
             
             else:
                 
@@ -707,48 +766,34 @@ async def callback(event):
              
         if roundSet[0] == "first" and voite == True:
             
-            if len(FactCounter) > 3:
+            if len(FactCounter) > 2:
                 
-                FactCounter.clear()
-                
-                FactCounter.append(1)
-                
-                FactCounter.append(1)
-                
-                FactCounter.append(1)
+                CountFirstRound = [1,1]
                 
             elif len(CountFirstRound) > 2:
                 
-                CountFirstRound.clear()
-                
-                CountFirstRound.append(1)
-                
-                CountFirstRound.append(1)
+                CountFirstRound = [1,1]
             
-            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True - FROM FACTS")
+            
+            await Voite(event,CountFirstRound, FactCounter, [2, 2]) 
             
         elif roundSet[1] == "second" and voite == True:
             
             if len(FactCounter) > 2:
                 
-                FactCounter.clear()
-                
-                FactCounter.append(1)
-                
-                FactCounter.append(1)
+                CountFirstRound = [1,1]
                 
             elif len(CountFirstRound) > 2:
                 
-                CountFirstRound.clear()
+                CountFirstRound = [1,1]
                 
-                CountFirstRound.append(1)
-                
-                CountFirstRound.append(1)
+            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True")
                 
             await Voite(event,CountFirstRound, FactCounter, [2, 2])
         
     elif str(event.data) in [str(b"1000F"), str(b"1001F"),str(b"1002F"), str(b"1003F"),str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
-        
+        voite = False
         users = cont.GetUsersId(findTheUser[0][5])
         
         if cont.CheckTheQuestionChecked(quesionID=question[1]) == True:
@@ -771,7 +816,9 @@ async def callback(event):
 
                             await sendMessage(user=user, option="score", text=text)
 
-                        cont.CheckedQ(quesionID=question[1])   
+                        cont.CheckedQ(quesionID=question[1])  
+                
+                voite = True 
                         
             elif str(event.data) in [str(b"1000T"), str(b"1001T"),str(b"1002T"), str(b"1003T")]:
     
@@ -786,18 +833,18 @@ async def callback(event):
                 for user in users[0]:
 
                     await sendMessage(user=user, option="score", text=f"جواب شما درست بود ✅🧠\n\nامتیاز شما **-{score[0][1]}-**🍾")
-        
+
+                voite = True 
+                
         elif cont.CheckTheQuestionChecked(quesionID=question[1]) == False:
                 
             await client.send_message(event.chat_id, "شما یک بار جواب این سوال را وارد کردید 😵‍💫👺\n\n لطفا از گزینه های بالا برای سوال دوم اقدام کنید 🔃2️⃣")
         
         if roundSet[0] == "first" and voite == True:
             
-            if len(FactCounter) > 3:
+            if len(FactCounter) > 2:
                 
                 FactCounter.clear()
-                
-                FactCounter.append(1)
                 
                 FactCounter.append(1)
                 
@@ -810,8 +857,10 @@ async def callback(event):
                 CountFirstRound.append(1)
                 
                 CountFirstRound.append(1)
+                
+            print(CountFirstRound, FactCounter, [2, 2], "from if roundSet[0] == 'first' and voite == True FROM Q&A")
             
-            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            await Voite(event,CountFirstRound, FactCounter, [2, 2])
             
         elif roundSet[1] == "second" and voite == True:
             
@@ -835,9 +884,13 @@ async def callback(event):
         
     elif str(event.data) in voitingButtonVal:
         
+        print(roundSet)
+        
         user = cont.GetUserByUName(event.sender.id)
         
         if roundSet[2] != "FINAL":
+            
+            print("Not FINAL")
             
             if user[0][4] != "Naato":
                 
@@ -897,6 +950,8 @@ async def callback(event):
                     
         elif roundSet[2] == "FINAL":
             
+            print("FINAL")
+            
             if user[0][4] != "Naato":
                 
                 if "N" not in str(event.data):
@@ -931,47 +986,47 @@ async def callback(event):
 
                 await client.send_message(int(user[0][2]),"شما دیگه نمیتونی کاری بکنی ❌")
         
-        userT = cont.GetUserByUName(int(event.sender.id)) 
-        
-        users = cont.GetUsersId(userT[0][5])
-        
-        if len(listOfVoite) == 2:
-        
-            if len(Trust) == 2:
-                
-                for user in users[0]:
+            userT = cont.GetUserByUName(int(event.sender.id)) 
+            
+            users = cont.GetUsersId(userT[0][5])
+            
+            if len(listOfVoite) == 2:
+            
+                if len(Trust) == 2:
                     
-                    if user[4] == "Naato":
+                    for user in users[0]:
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
-                    
-                    else:
+                        if user[4] == "Naato":
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
-                    
-                end = cont.EndTheGame(groupID=userT[0][5])
-                
-                for points in end:
-                    
-                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی {points[3]} میباشد.")
-                    
-            elif len(Trust) < 2:
-                
-                for user in users[0]:
-                    
-                    if user[4] == "Naato":
+                        else:
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
+                    end = cont.EndTheGame(groupID=userT[0][5])
+                    
+                    for points in end:
+                        
+                        await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی {points[3]} میباشد.")
+                        
+                elif len(Trust) < 2:
+                    
+                    for user in users[0]:
+                        
+                        if user[4] == "Naato":
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
 
-                    else:
+                        else:
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+                    end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
                     
-                end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
-                
-                for points in end:
-                    
-                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
+                    for points in end:
+                        
+                        await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
 
     elif event.data == b"20":
         
