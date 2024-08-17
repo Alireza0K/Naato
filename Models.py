@@ -310,15 +310,17 @@ class Models:
     
     def CheckNaato(self, users):
         
-        check = False
+        check = True
         
         for user in users:
             
-            print(user)
+            if user[4] == "Naato":
+            
+                check = False
         
         print("from -", inspect.stack()[0][3])
         
-        return True
+        return check
     
     def GetFacts(self, userID, fact):
         
@@ -420,7 +422,7 @@ class Models:
         
         checkA = self.CheckAnswers(question_Hash)
         
-        if checkA:
+        if checkA[0]:
         
             sql = "insert into `Answers` (`ID`, `questionID`, `text`, `check`) values (NULL, '%s', '%s', '%s')" % (question_Hash, answers, check)
 
@@ -439,6 +441,8 @@ class Models:
         
         check = True
         
+        lenght = 0
+        
         sql = "select * from Answers where questionID = '%s'" % (question_Hash)
         
         mycursor.execute(sql)
@@ -449,7 +453,9 @@ class Models:
             
             check = False
             
-        return check 
+            lenght = len(answers)
+            
+        return [check, lenght] 
     
     def ShowQuestionsAndAnswers(self, groupID):
         

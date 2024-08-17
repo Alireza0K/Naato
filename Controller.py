@@ -106,9 +106,9 @@ class Controller:
     
     def AnswersNarrator(self, question_Hash, answers, check):
         
-        model.GetAnswers(question_Hash=question_Hash, answers=answers, check=check)
+        check = model.GetAnswers(question_Hash=question_Hash, answers=answers, check=check)
         
-        return True
+        return check
     
     def checkQ(self,groupID):
         
