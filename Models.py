@@ -284,25 +284,39 @@ class Models:
         
         result = mycursor.fetchall()
         
-        self.CheckNaato(users=result)
+        check = self.CheckNaato(users=result)
         
-        usersLen = len(result)
+        if check:
         
-        choose = random.randint(0, (usersLen - 1))
-        
-        user = result[choose][0]
-        
-        naatoHash = result[choose][3]
-        
-        sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
-        
-        mycursor.execute(sql)
-        
-        myDB.commit()        
+            usersLen = len(result)
+            
+            choose = random.randint(0, (usersLen - 1))
+            
+            user = result[choose][0]
+            
+            naatoHash = result[choose][3]
+            
+            sql = "update `users` set nickname = '%s' where id = '%s'" % ("Naato", user)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()        
 
-        return naatoHash
+            return naatoHash
+        
+        else:
+            
+            return check
     
     def CheckNaato(self, users):
+        
+        check = False
+        
+        for user in users:
+            
+            print(user)
+        
+        print("from -", inspect.stack()[0][3])
         
         return True
     

@@ -485,40 +485,50 @@ async def callback(event):
         
         id = cont.Start(0)
         
-        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = User.id)
+        User = event.sender # locals Sender User.
+        
+        regesterTheUser = cont.GetUserInformation(id[0], name = User.first_name, username = int(User.id))
         
         if regesterTheUser[0] == False:
+            print(regesterTheUser[0])
             
             await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
         
         elif regesterTheUser[0] == True:
+            print(regesterTheUser[0])
             
             await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
         
     elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
-        
+        User = event.sender # locals Sender User.
         await event.respond("آیدی گروه خودتون رو وارد کنید:")
 
         if len(countOfAsign) == 0:
             
-            @client.on(events.NewMessage())
+            @client.on(events.NewMessage()) # BUUUUUUUUUUG
             async def AddToGroup(event):
+                
+                User = event.sender # locals Sender User.
                 
                 countOfAsign.append(1)
                 
                 MInfo = str(event.message.message)
                 
                 User = event.sender
-                    
+                
                 groupinfo = cont.GetGroupInformation(MInfo)
                     
                 if groupinfo != None and len(MInfo) > 20:
                         
                     groupName = groupinfo[0][0][2]
                     
-                    groupID = groupinfo[0][0][1]
+                    groupID = groupinfo[0][0][1] # Bug here 👇
                     
-                    regesterTheUser = cont.ChangeGroupID(userID = User.id, newGroup = event.message.message)
+                    print(User) #why?
+                    id = User.id
+                    usernnnn = User.first_name
+                    
+                    regesterTheUser = cont.GetUserInformation(groupID=MInfo, name = usernnnn, username = str(id))
                     
                     try:
                         
@@ -532,10 +542,12 @@ async def callback(event):
                             
                             usersCount = usersinfo[1]
                             
+                            print(usersCount)
+                            
                             if usersCount == 6:
                                     
                                 check = cont.ChooseNarrator(groupID)  # Selecting Narrator from group
-                                    
+                                print(check)
                                 cont.ChooseNaato(groupID)
                                     
                                 if check == True:
@@ -678,6 +690,8 @@ async def callback(event):
             if user[4] == "Naato":
                 
                 facts = cont.ShowFacts(user[3])
+                
+        print(facts)
                      
         FactCounter.append(1)
         
@@ -725,7 +739,7 @@ async def callback(event):
                 
                 CountFirstRound.append(1)
             
-            await Voite(event,CountFirstRound, FactCounter, [2, 3])
+            await Voite(event,CountFirstRound, FactCounter, [2, 3]) 
             
         elif roundSet[1] == "second" and voite == True:
             
@@ -835,9 +849,13 @@ async def callback(event):
         
     elif str(event.data) in voitingButtonVal:
         
+        print(roundSet)
+        
         user = cont.GetUserByUName(event.sender.id)
         
         if roundSet[2] != "FINAL":
+            
+            print("Not FINAL")
             
             if user[0][4] != "Naato":
                 
@@ -897,6 +915,8 @@ async def callback(event):
                     
         elif roundSet[2] == "FINAL":
             
+            print("FINAL")
+            
             if user[0][4] != "Naato":
                 
                 if "N" not in str(event.data):
@@ -931,53 +951,57 @@ async def callback(event):
 
                 await client.send_message(int(user[0][2]),"شما دیگه نمیتونی کاری بکنی ❌")
         
-        userT = cont.GetUserByUName(int(event.sender.id)) 
-        
-        users = cont.GetUsersId(userT[0][5])
-        
-        if len(listOfVoite) == 2:
-        
-            if len(Trust) == 2:
+            userT = cont.GetUserByUName(int(event.sender.id)) 
+            
+            users = cont.GetUsersId(userT[0][5])
+            
+            if len(listOfVoite) == 2:
                 
-                for user in users[0]:
+                print("Is There actuly running. <--->")
+            
+                if len(Trust) == 2:
                     
-                    if user[4] == "Naato":
+                    for user in users[0]:
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
-                    
-                    else:
+                        if user[4] == "Naato":
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
-                    
-                end = cont.EndTheGame(groupID=userT[0][5])
-                
-                for points in end:
-                    
-                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی {points[3]} میباشد.")
-                    
-            elif len(Trust) < 2:
-                
-                for user in users[0]:
-                    
-                    if user[4] == "Naato":
+                        else:
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
+                    end = cont.EndTheGame(groupID=userT[0][5])
+                    
+                    for points in end:
+                        
+                        await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی {points[3]} میباشد.")
+                        
+                elif len(Trust) < 2:
+                    
+                    for user in users[0]:
+                        
+                        if user[4] == "Naato":
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nبرنده شدید ✌️🍾")
 
-                    else:
+                        else:
+                            
+                            await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
                         
-                        await sendMessage(user=user, option="UserWin", text="و این که شما ........\n\nباختید 🥲👹")
+                    end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
                     
-                end = cont.EndTheGame(groupID=userT[0][5], Naato="Naato")
-                
-                for points in end:
-                    
-                    await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
+                    for points in end:
+                        
+                        await sendMessage(user=points, option="ShowPoints", text=f"مجموعه امتیازات شما در این بازی ***{points[3]}*** میباشد.")
 
     elif event.data == b"20":
         
         user = cont.GetUserByUName(event.sender.id)
         
         users = cont.GetUsersId(user[0][5])
+        
+        print(len(users[0]))
         
         if len(users[0]) == 4:
             
