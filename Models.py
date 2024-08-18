@@ -618,6 +618,30 @@ class Models:
         users = mycursor.fetchall()
         
         return users
+    
+    def AliveUsers(self, groupID): # This Must be Complete
+        
+        try:
+        
+            sql = "update `users` set `check` = 1 where `groupID` = '%s'" % (groupID)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+            return True
+            
+        except mysql.connector.Error as err:
+            
+            return err
+        
+    def ClearTheNickname(self, groupID): # also This Must be Complete
+        
+        sql = "update `users` set `nickname` = '' where `groupID` = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        myDB.commit()
 
     def ClearTheGroup(self, groupID):
         
@@ -669,7 +693,7 @@ class Models:
                 
                 mycursor.execute(sql)
                 
-                myDB.commit()  
+                myDB.commit() 
                 
 model = Models()
 
