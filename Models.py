@@ -623,7 +623,7 @@ class Models:
         
         try:
         
-            sql = "update `users` set `check` = 1 where `groupID` = %s" % (groupID)
+            sql = "update `users` set `check` = 1 where `groupID` = '%s'" % (groupID)
             
             mycursor.execute(sql)
             
@@ -637,7 +637,7 @@ class Models:
         
     def ClearTheNickname(self, groupID): # also This Must be Complete
         
-        sql = "update `users` set nickname = '' where groupID = %s" % (groupID)
+        sql = "update `users` set `nickname` = '' where `groupID` = '%s'" % (groupID)
         
         mycursor.execute(sql)
         
