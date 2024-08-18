@@ -200,6 +200,10 @@ class Controller:
         
         UsersPoints = self.AllUsersPoints(groupID=groupID)
         
+        model.AliveUsers(groupID=groupID) # Set the check to '1'
+        
+        model.ClearTheNickname(groupID=groupID) # reset the Nickname of all users in the group
+        
         model.ClearTheGroup(groupID=groupID) # Reset the group field
         
         model.DeleteTheGroup(groupID=groupID) # Deleting the Group table will cascade to the deletion of score_scope, questions, and answers tables
