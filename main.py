@@ -56,6 +56,11 @@ async def start(event):
     
     if await Adds(Channels, event.sender.id) == True:
         
+        markup = event.client.build_reply_markup([
+            [Button.text(text="Fast Key 🔥", selective=False)],
+            [Button.text('/start'),Button.text('/')]
+        ])
+            
         keyboard = [
             [  
                 Button.inline("شروع بازی🎮", b"1"), 
@@ -75,6 +80,10 @@ async def start(event):
         await client.send_message(entity=event.chat_id
                               ,message=message
                               ,buttons=keyboard)  
+        
+        await client.send_message(entity=event.chat_id, 
+                              message="یه کیبورد دم دستی هم برات اون پایین گذاشتم، یه سری چیزی که ممکنه لازمت بشه توش هست. 😁",
+                              buttons=markup)
         
     else:
 
