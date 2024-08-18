@@ -816,8 +816,6 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
         
         elif roundSet[2] == "FINAL":
             
-            print(facts)
-            
             if len(FactCounter) <= 1:
                 
                 await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
@@ -954,14 +952,10 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
             await Voite(event,CountFirstRound, FactCounter, [1, 1])
         
     elif str(event.data) in voitingButtonVal:
-        
-        print(roundSet)
-        
+                
         user = cont.GetUserByUName(event.sender.id)
         
         if roundSet[2] != "FINAL":
-            
-            print("Not FINAL")
             
             if user[0][4] != "Naato":
                 
@@ -1020,9 +1014,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                     await event.respond(f"قاعدتا خودت رو نمیتونی حظف کنی 😶‍🌫️🤣")
                     
         elif roundSet[2] == "FINAL":
-            
-            print("FINAL")
-            
+
             if user[0][4] != "Naato":
                 
                 if "N" not in str(event.data):
