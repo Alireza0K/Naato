@@ -56,6 +56,11 @@ async def start(event):
     
     if await Adds(Channels, event.sender.id) == True:
         
+        markup = event.client.build_reply_markup([
+            [Button.text(text="Fast Key 🔥", selective=False)],
+            [Button.text('/start'),Button.text('/')]
+        ])
+            
         keyboard = [
             [  
                 Button.inline("شروع بازی🎮", b"1"), 
@@ -75,6 +80,10 @@ async def start(event):
         await client.send_message(entity=event.chat_id
                               ,message=message
                               ,buttons=keyboard)  
+        
+        await client.send_message(entity=event.chat_id, 
+                              message="یه کیبورد دم دستی هم برات اون پایین گذاشتم، یه سری چیزی که ممکنه لازمت بشه توش هست. 😁",
+                              buttons=markup)
         
     else:
 
@@ -816,8 +825,6 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
         
         elif roundSet[2] == "FINAL":
             
-            print(facts)
-            
             if len(FactCounter) <= 1:
                 
                 await client.send_message(event.chat_id, f"فَکت اینه که: \n**|- {str(facts[0][2])} -|**\n\nاین رو برای بازی کن ها بازگو کن 😶‍🌫️👹\n\nو دوباره روی دکمه **فَکت** ها بزن 👆")
@@ -954,14 +961,10 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
             await Voite(event,CountFirstRound, FactCounter, [1, 1])
         
     elif str(event.data) in voitingButtonVal:
-        
-        print(roundSet)
-        
+                
         user = cont.GetUserByUName(event.sender.id)
         
         if roundSet[2] != "FINAL":
-            
-            print("Not FINAL")
             
             if user[0][4] != "Naato":
                 
@@ -1020,9 +1023,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                     await event.respond(f"قاعدتا خودت رو نمیتونی حظف کنی 😶‍🌫️🤣")
                     
         elif roundSet[2] == "FINAL":
-            
-            print("FINAL")
-            
+
             if user[0][4] != "Naato":
                 
                 if "N" not in str(event.data):
