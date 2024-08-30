@@ -57,8 +57,8 @@ async def start(event):
     if await Adds(Channels, event.sender.id) == True:
         
         markup = event.client.build_reply_markup([
-            [Button.text(text="Fast Key 🔥", selective=False)],
-            [Button.text('/start'),Button.text('/')]
+            [Button.text(text="Fast Key 🔥", selective=False, resize=True)],
+            [Button.text('/start', resize=True),Button.text('/', resize=True)]
         ])
             
         keyboard = [
