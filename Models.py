@@ -100,7 +100,7 @@ class Models:
         
         elif checkUser == False:
             
-            sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`,`check`) VALUES (NULL, %s, %s, %s, %s, %s, %s,1);"
+            sql = "INSERT INTO `users` (`ID`, `name`, `username`, `user_Hash`, `nickname`, `groupID`, `points`,`check`, `last-active`) VALUES (NULL, %s, %s, %s, %s, %s, %s,1,CURRENT_TIMESTAMP);"
             
             points = 0
             
@@ -117,6 +117,8 @@ class Models:
             situation = False
             
             self.ChangeUserGroup(userHash=username, newGroup=groupID)
+            
+            self.ChangeUserLastActive(userHash=username)
         
         return [situation]
     
@@ -241,6 +243,28 @@ class Models:
         try:
 
             sql = "update `users` set groupID = '%s' where username = '%s'" % (newGroup, userHash)
+            
+            mycursor.execute(sql)
+            
+            myDB.commit()
+            
+            check = True
+            
+        except mysql.connector.Error as err:
+            
+            print(err)
+        
+        result = self.GetUserByHash(userHash)
+        
+        return check
+    
+    def ChangeUserLastActive(self, userHash):
+        
+        check = False
+        
+        try:
+
+            sql = "update `users` set `last-active` = CURRENT_TIMESTAMP where username = '%s'" % (userHash)
             
             mycursor.execute(sql)
             

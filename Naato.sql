@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 29, 2024 at 01:37 AM
+-- Generation Time: Aug 30, 2024 at 10:41 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.2.0
 
@@ -101,7 +101,8 @@ CREATE TABLE `users` (
   `nickname` varchar(50) NOT NULL,
   `groupID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `points` int NOT NULL,
-  `check` tinyint NOT NULL DEFAULT '1'
+  `check` tinyint NOT NULL DEFAULT '1',
+  `last-active` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
