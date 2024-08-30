@@ -224,7 +224,11 @@ class Models:
     
     def ChangeUserNickname(self, groupID, nickname):
         
-        result = self.GetUsersByGroup(groupID)
+        sql = "SELECT * FROM `users` WHERE groupID = '%s' ORDER BY `users`.`last-active` ASC" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        result = mycursor.fetchall()
         
         firstUser = result[0]
         
