@@ -160,6 +160,8 @@ async def F(event):
     check = cont.checkQ(user[0][5])
     
     if check == False:
+        
+        QCheckForNaato = False
 
         facts = str(event.message.message)
                     
@@ -187,15 +189,17 @@ async def F(event):
                         
             ApplyFacts = cont.GetFactsFromEachUser(user[0][3], facts=facts)
             
+            QCheckForNaato = True
+            
         elif len(facts) == 5 and user[0][4] != "Naato":
                         
             await event.respond("تعداد فکت های شما کاملا اندازس، آفرین🥳")
-                        
+    
         elif len(facts) < 5:
                         
             await event.respond("تعداد فکت های شما از مجاز کمتر بود لطفا دوباره وارد کنید.😵‍💫")
-            
-        if user[0][4] == "Naato":
+        
+        if user[0][4] == "Naato" and QCheckForNaato == True:
             
             await client.send_message(event.chat_id,"تبریک میگم شما** -ناتو-** این بازی هستید.🎭", parse_mode="markdown")
             
@@ -234,21 +238,29 @@ async def RA(event):
     
     user = event.sender
     
-    global findTheUser
+    checkNaatoFacts = cont.CheckNaatoFacts(userID=user.id)
     
-    findTheUser = cont.GetUserByUName(user.id)
-    
-    keyboard = [
-        [
-            Button.inline("سوال ها", b"15"),
-            Button.inline("فَکت ها", b"16")  
-        ],
-    ]
-    
-    if findTheUser[0][4] == "narrator":
+    if checkNaatoFacts:
         
-        await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
+        global findTheUser
+        
+        findTheUser = cont.GetUserByUName(user.id)
+        
+        keyboard = [
+            [
+                Button.inline("سوال ها", b"15"),
+                Button.inline("فَکت ها", b"16")  
+            ],
+        ]
+        
+        if findTheUser[0][4] == "narrator":
+            
+            await client.send_message(event.chat_id,"شما سایکل **اول** بازی رو شروع کردید. 🔃1️⃣\n\nتوی این بخش شما  **دو سوال**  و **دو فکت** مطرح میکنید، و بعد از جواب دادن تیم به بخش سخت رای دهی میرسیم.\n\nکه یکی از تیم **حذف** میشه.🥲",buttons=keyboard)
 
+    else:
+        
+        await client.send_message(event.chat_id, "صبر کن تا بچه ها فکت هاشون رو وارد کنن لطفا.")
+        
 @client.on(events.NewMessage(pattern="/RB")) # Second Cicle of Game 
 async def RB(event):
     
@@ -649,6 +661,8 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
             
                 answers = answers.replace("/A", "")
                 
+                checkQ = cont.checkQ(groupID=groupID)
+                
                 edit = answers.split("\n")
                 
                 if " " in edit:
@@ -682,10 +696,10 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                 if applyAnswers[0] == True and applyAnswers[1] < 4:    
         
                     await event.respond("جواب شما ثبت شد.")
-                
-                elif applyAnswers[0] == False and applyAnswers[1] == 4:
                     
-                    await event.respond("چهار جواب شما ثبت شده.")
+                elif checkQ == False:
+                    
+                    await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
     
     elif event.data == b'15': # This button is for QandA round One
 
