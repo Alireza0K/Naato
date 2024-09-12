@@ -92,6 +92,28 @@ class Controller:
         
         return naato
     
+    def CheckNaatoFacts(self, userID):
+        
+        check = False
+        
+        userINFO = self.GetUserByUName(username=userID)
+        
+        groupUSERS = self.GetUsersId(group=userINFO[0][5])
+        
+        for user in groupUSERS[0]:
+            
+            if user[4] == "Naato":
+                
+                facts = self.ShowFacts(naatoID=user[3]) 
+                
+                if len(facts) == 5:
+                    
+                    check = True
+
+        print(check)
+        
+        return check
+    
     def QandANarator(self,userNickName, groupID, Q, A):
         
         if userNickName == "narrator":
