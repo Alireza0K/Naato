@@ -327,9 +327,11 @@ async def END(event):
     keyboard = [
         [
             Button.inline("سوال ها", b"15"),
-            Button.inline("فَکت ها", b"16"),
-            Button.inline("آخرین بخش 🎃", b"20")   
+            Button.inline("فَکت ها", b"16")   
         ],
+        [
+            Button.inline("آخرین بخش 🎃", b"20")
+        ]
     ]
     
     if findTheUser[0][4] == "narrator":
@@ -962,7 +964,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                 
             await Voite(event,CountFirstRound, FactCounter, [1, 2])
             
-        elif roundSet[1] == "FINAL" and voite == True:
+        elif roundSet[2] == "FINAL" and voite == True:
             
             if len(FactCounter) > 1:
                 
@@ -1024,9 +1026,17 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                             
                             users = cont.GetUsersId(userT[0][5])
                             
-                            Narrator = users[0][0]
+                            Narrator = cont.WhoIsTheNarrator(groupID=userT[0][5])
                             
                             await sendMessage(user=Narrator, option="notice", text=f"{userT[0][1]} حذف شد 💀")
+                            
+                            if roundSet[0] == "first":
+                            
+                                await sendMessage(user=Narrator, option="notice", text=f"با `/RB` راند بعدی رو شروع کن")
+                            
+                            elif roundSet[1] == "second":
+                                
+                                await sendMessage(user=Narrator, option="notice", text=f"با `/END` راند بعدی رو شروع کن")
                             
                     else:
                         

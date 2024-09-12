@@ -86,6 +86,20 @@ class Controller:
         
         return check
     
+    def WhoIsTheNarrator(self, groupID):
+        
+        narrator = None
+        
+        users = self.GetUsersId(group=groupID)
+        
+        for user in users[0]:
+            
+            if user[4] == "narrator":
+                
+                narrator = user
+        
+        return narrator
+    
     def ChooseNaato(self, group):
         
         naato = model.ChooseNaato(group)
@@ -110,8 +124,6 @@ class Controller:
                     
                     check = True
 
-        print(check)
-        
         return check
     
     def QandANarator(self,userNickName, groupID, Q, A):
