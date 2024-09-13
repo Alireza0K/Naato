@@ -516,13 +516,13 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
             
             if User.username != None:
                 
-                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \nFrom > {User.username}")
+                await client.send_message('@NaatoAdmin', f"Issue > {event.message.message} \nFrom > {User.username}")
             
                 await client.send_message(User.username, "پیام شما به ادمین ارسال شد")
                 
             elif User.username == None:
                 
-                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \n\nFrom > User Dosent have username")
+                await client.send_message('@NaatoAdmin', f"Issue > {event.message.message} \n\nFrom > User Dosent have username")
             
             await event.respond("خیلی خوشحالیم که مشکل رو به ما اطلاع دادید،\nدر چند ساعت آینده برسی و رفع خواهد شد.🫡🙏🏻")
         
@@ -533,7 +533,8 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
         @client.on(events.NewMessage)
         async def handler(event):
             
-            await client.send_message('@Alirez0K', event.message.message)
+            await client.send_message('@NaatoAdmin',
+                                      f"Message >> {event.message.message} \n\nFrom >> {event.sender.id}")
             
     elif event.data == b"8":
         
