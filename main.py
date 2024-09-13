@@ -93,6 +93,8 @@ async def start(event):
             text = f"Join to channel {channel.replace('https://t.me/','')} ✅"
             
             keyboard.append([Button.url(text=text,url=channel)])
+        
+        keyboard.append([Button.inline("عضو شدم ⚡️", b"1111")]) # this button clickable to start the Bot again
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
                 
@@ -476,7 +478,11 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
     
     print("from -", inspect.stack()[0][3])
     
-    if event.data == b'1':
+    if event.data == b"1111":
+        
+        await start(event=event)
+    
+    elif event.data == b'1':
         
         keyBoard = [
             [
