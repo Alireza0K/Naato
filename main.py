@@ -4,7 +4,6 @@ from telethon import types, errors
 from dotenv import load_dotenv
 from Controller import Controller
 import os
-import logging
 import inspect # this  lib help me to find where is the bugs.
 
 load_dotenv()

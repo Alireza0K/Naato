@@ -6,7 +6,6 @@ import hashlib
 import datetime
 import random
 import os
-import time
 import inspect
 import mysql.connector.errorcode
 
