@@ -1,0 +1,4 @@
+telethon==1.36.0
+mysql-connector-python==8.2.0
+python-dotenv==1.0.0
+Faker==20.1.0

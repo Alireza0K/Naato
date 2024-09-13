@@ -4,7 +4,6 @@ from telethon import types, errors
 from dotenv import load_dotenv
 from Controller import Controller
 import os
-import logging
 import inspect # this  lib help me to find where is the bugs.
 
 load_dotenv()
@@ -19,7 +18,7 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
-Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"] # Channels Adds list
+Channels = ["https://t.me/naato_game","https://t.me/Persian_iss"] # Channels Adds list
 
 channelValidation = [] # For user Adds Validation
 
@@ -94,6 +93,8 @@ async def start(event):
             text = f"Join to channel {channel.replace('https://t.me/','')} ✅"
             
             keyboard.append([Button.url(text=text,url=channel)])
+        
+        keyboard.append([Button.inline("عضو شدم ⚡️", b"1111")]) # this button clickable to start the Bot again
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
                 
@@ -477,7 +478,11 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
     
     print("from -", inspect.stack()[0][3])
     
-    if event.data == b'1':
+    if event.data == b"1111":
+        
+        await start(event=event)
+    
+    elif event.data == b'1':
         
         keyBoard = [
             [
@@ -517,13 +522,13 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
             
             if User.username != None:
                 
-                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \nFrom > {User.username}")
+                await client.send_message('@NaatoAdmin', f"Issue > {event.message.message} \nFrom > {User.username}")
             
                 await client.send_message(User.username, "پیام شما به ادمین ارسال شد")
                 
             elif User.username == None:
                 
-                await client.send_message('@Alirez0K', f"Issue > {event.message.message} \n\nFrom > User Dosent have username")
+                await client.send_message('@NaatoAdmin', f"Issue > {event.message.message} \n\nFrom > User Dosent have username")
             
             await event.respond("خیلی خوشحالیم که مشکل رو به ما اطلاع دادید،\nدر چند ساعت آینده برسی و رفع خواهد شد.🫡🙏🏻")
         
@@ -534,7 +539,8 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
         @client.on(events.NewMessage)
         async def handler(event):
             
-            await client.send_message('@Alirez0K', event.message.message)
+            await client.send_message('@NaatoAdmin',
+                                      f"Message >> {event.message.message} \n\nFrom >> {event.sender.id}")
             
     elif event.data == b"8":
         
