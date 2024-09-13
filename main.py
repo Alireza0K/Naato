@@ -18,7 +18,7 @@ client = TelegramClient("bot", Api_id ,Api_hash).start(bot_token=Bot_token)
 
 cont = Controller("/start")
 
-Channels = ["https://t.me/HowmanyCocksAreAlive","https://t.me/Howoldtheearth"] # Channels Adds list
+Channels = ["https://t.me/naato_game","https://t.me/Persian_iss"] # Channels Adds list
 
 channelValidation = [] # For user Adds Validation
 
