@@ -684,11 +684,23 @@ class Models:
             
     def DeleteTheGroup(self, groupID):
         
+        check = False
+        
         sql = "DELETE FROM `groups` WHERE group_Hash = '%s';" % (groupID)
         
         mycursor.execute(sql)
+        
+        try: 
             
-        myDB.commit()     
+            myDB.commit() 
+            
+            check = True
+            
+        except mysql.connector.errors as err:
+            
+            print("Error - ", err) 
+        
+        return check   
             
     def ToghseThePoint(self, groupID):
 

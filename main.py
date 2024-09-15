@@ -552,7 +552,16 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
         
         if regesterTheUser[0] == False:
             
-            await client.send_message(event.chat_id, message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", parse_mode="markdown")
+            keyBoard = [
+                [
+                    Button.inline("حذف گروه ␡", b"D01")
+                ]
+            ]
+            
+            await client.send_message(event.chat_id, 
+                                      message=f"سلامی دوباره به تو جذاب 😍😎\n\nخیلی خوشحالیم که دوباره تورو توی بازی جذابمون میبینیم.\n\nامیدوارم که قوانین رو یادت مونده باشه😁\n\nایینم لینک گروه جدید برای تو و دوستات.\n\n`{id[0]}`\nاسم گروه:{id[1]}", 
+                                      parse_mode="markdown", 
+                                      buttons=keyBoard)
         
         elif regesterTheUser[0] == True:
 
@@ -580,7 +589,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                 
                 groupinfo = cont.GetGroupInformation(MInfo)
                     
-                if groupinfo != None and len(MInfo) > 20:
+                if groupinfo != None and len(MInfo) > 20 and len(groupinfo) > 1:
                         
                     groupName = groupinfo[0][0][2]
                     
@@ -622,10 +631,26 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                                         
                     except TypeError:
                         
-                        print(TypeError)             
+                        print(TypeError) 
+                           
+                elif groupinfo == None or len(groupinfo) <= 1:
+                    
+                    await client.send_message(event.chat_id, "گروهی با این **هَش** وجود نداره 😵‍💫", reply_to=event.message.id)
                                
-                
-                        
+    elif event.data == b"D01":
+        
+        user = event.sender
+        
+        Deleted = cont.DeleteGroup(userID=user.id)
+        
+        if Deleted:
+            
+            await client.send_message(event.chat_id, "گروه شما با موافقیت پاک شد 🍀")
+
+        else:
+            
+            await client.send_message(event.chat_id, "به ادمین پیام بده چون گروه پاک نشدش. 💀😵‍💫")
+              
     elif event.data == b"10":
         
         await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:") # This section for Get questions from Narrator
