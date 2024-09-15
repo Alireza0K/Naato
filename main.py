@@ -588,8 +588,8 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                 User = event.sender
                 
                 groupinfo = cont.GetGroupInformation(MInfo)
-                    
-                if groupinfo != None and len(MInfo) > 20 and len(groupinfo) > 1:
+                
+                if groupinfo != None and len(MInfo) > 20 and len(groupinfo[0]) >= 1:
                         
                     groupName = groupinfo[0][0][2]
                     
@@ -632,9 +632,9 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                     except TypeError:
                         
                         print(TypeError) 
-                           
-                elif groupinfo == None or len(groupinfo) <= 1:
-                    
+
+                if len(MInfo) < 24 or len(groupinfo[0]) == 0:
+                                                            
                     await client.send_message(event.chat_id, "گروهی با این **هَش** وجود نداره 😵‍💫", reply_to=event.message.id)
                                
     elif event.data == b"D01":
