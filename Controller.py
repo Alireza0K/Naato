@@ -222,6 +222,16 @@ class Controller:
             
         return usersPoints
     
+    def DeleteGroup(self, userID):
+        
+        groupID = self.GetUserByUName(username=userID)[0][5]
+        
+        model.ClearTheNickname(groupID=groupID) # reset the Nickname of user
+                
+        modify = model.DeleteTheGroup(groupID=groupID)
+        
+        return modify
+    
     def EndTheGame(self, groupID, Naato = None):
         
         if Naato != None:
