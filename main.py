@@ -564,7 +564,8 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
 
         if len(countOfAsign) == 0:
             
-            @client.on(events.NewMessage()) # BUUUUUUUUUUG
+            @client.on(events.NewMessage(pattern="NHF:")) # BUUUUUUUUUUG
+            
             async def AddToGroup(event):
                 
                 print("from -", inspect.stack()[0][3])
@@ -621,7 +622,9 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                                         
                     except TypeError:
                         
-                        print(TypeError) 
+                        print(TypeError)             
+                               
+                
                         
     elif event.data == b"10":
         

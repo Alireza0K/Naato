@@ -71,7 +71,7 @@ class Models:
         
         nowDateTime = datetime.datetime.now() 
         
-        hashValue = hashlib.md5((groupName + str(nowDateTime)).encode()).hexdigest()
+        hashValue = "NHF:" + hashlib.md5((groupName + str(nowDateTime)).encode()).hexdigest()
         
         sql = "INSERT INTO `groups` (`ID`, `group_Hash`, `group_name`, `group_question_Hash`, `open`) VALUES (NULL, %s, %s, %s, '1');"
         
