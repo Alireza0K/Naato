@@ -403,6 +403,18 @@ class Models:
         
         return [check, question_Hash]
     
+    def lastQuestion(self, groupID):
+        
+        check = True
+        
+        sql = "select * from questions where groupID = '%s'" % (groupID)
+        
+        mycursor.execute(sql)
+        
+        questions = mycursor.fetchall()
+            
+        return questions[-1]
+    
     def CheckQuestions(self, groupID):
         
         check = True

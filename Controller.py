@@ -126,15 +126,11 @@ class Controller:
 
         return check
     
-    def QandANarator(self,userNickName, groupID, Q, A):
+    def QandANarator(self,userNickName, groupID, Q):
         
         if userNickName == "narrator":
-                
-            for questions in Q:
-                
-                question = questions
                     
-                qa = model.GetQuestions(groupID, question) 
+            qa = model.GetQuestions(groupID, question=Q) 
                 
         return qa
     
@@ -149,6 +145,12 @@ class Controller:
         check = model.CheckQuestions(groupID)
         
         return check
+    
+    def lastQ(self, groupID):
+        
+        results = model.lastQuestion(groupID=groupID)
+        
+        return results
     
     def ShowQandA(self, groupID):
         

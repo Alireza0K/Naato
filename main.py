@@ -97,7 +97,95 @@ async def start(event):
         keyboard.append([Button.inline("عضو شدم ⚡️", b"1111")]) # this button clickable to start the Bot again
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
+        
+@client.on(events.NewMessage(pattern="/Q")) # This Function for Get questions from Narrator
+async def Q(event):
+    
+    print("from -", inspect.stack()[0][3])
+    
+    user = event.sender.id
+    
+    user = cont.GetUserByUName(user)
+    
+    usernickname = user[0][4]
+    
+    groupID = user[0][5]
+    
+    question = str(event.message.message)
+    
+    question = question.replace("/Q", "")
+    
+    questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=question)
+    
+    if questions[0]:
+        
+        await client.send_message(event.chat_id,
+        "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1``` \nجواب درست را با `جواب = 1` نشان میدهیم",
+        parse_mode="markdown")
+        
+    elif questions[0] == False:
+            
+        await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+            
+    else:
                 
+        await event.respond("شما چهار سوال وارد کردید.")
+
+@client.on(events.NewMessage(pattern="/A")) # This Function inserting answers in to
+async def A(event):
+    
+    user = event.sender
+    
+    userDB = cont.GetUserByUName(username=user.id)
+    
+    print("from -", inspect.stack()[0][3])
+    
+    answers = str(event.message.message)
+    
+    answers = answers.replace("/A", "")
+    
+    checkQ = cont.checkQ(groupID=userDB[0][5])
+    
+    questions = cont.lastQ(groupID=userDB[0][5])
+    
+    edit = answers.split("\n")
+    
+    if " " in edit:
+        
+        edit.remove(" ")
+        
+    if "" in edit:
+            
+        edit.remove("")
+            
+        for i in range(0,len(edit)):
+                
+            ed = edit[i]
+                
+            ed = ed.split("=")
+                
+            edit[i] = ed
+                
+            answers = edit
+                
+        for answer in answers:
+                    
+            if len(answer) == 2:
+                        
+                applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
+                        
+            elif len(answer) == 1:
+                            
+                applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
+                            
+        if applyAnswers[0] == True and applyAnswers[1] < 4:
+                                
+            await event.respond("جواب شما ثبت شد.")
+                                
+        elif checkQ == False:
+                                    
+            await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+
 async def is_participant(channel, user) -> bool:
     
     print("from -", inspect.stack()[0][3])
@@ -661,89 +749,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
               
     elif event.data == b"10":
         
-        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:") # This section for Get questions from Narrator
-        
-        @client.on(events.NewMessage(pattern="/Q"))
-        async def Q(event):
-            
-            print("from -", inspect.stack()[0][3])
-            
-            user = event.sender.id
-            
-            user = cont.GetUserByUName(user)
-            
-            usernickname = user[0][4]
-            
-            groupID = user[0][5]
-            
-            question = str(event.message.message)
-            
-            question = question.replace("/Q", "")
-            
-            questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=[question], A="Test magic")
-            
-            if questions[0]:
-                
-                await client.send_message(event.chat_id, 
-                                          "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1``` \nجواب درست را با `جواب = 1` نشان میدهیم",
-                                          parse_mode="markdown")
-            
-            elif questions[0] == False:
-                
-                await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
-            
-            else:
-                
-                await event.respond("شما چهار سوال وارد کردید.")
-            
-            @client.on(events.NewMessage(pattern="/A"))
-            async def A(event):
-                
-                print("from -", inspect.stack()[0][3])
-                
-                answers = str(event.message.message)
-            
-                answers = answers.replace("/A", "")
-                
-                checkQ = cont.checkQ(groupID=groupID)
-                
-                edit = answers.split("\n")
-                
-                if " " in edit:
-                    
-                    edit.remove(" ")
-                    
-                if "" in edit:
-                    
-                    edit.remove("")
-                    
-                for i in range(0,len(edit)):
-                    
-                    ed = edit[i]
-                    
-                    ed = ed.split("=")
-                    
-                    edit[i] = ed
-                    
-                answers = edit
-                
-                for answer in answers:
-                    
-                    if len(answer) == 2:
-                        
-                        applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
-                        
-                    elif len(answer) == 1:
-                        
-                        applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
-                        
-                if applyAnswers[0] == True and applyAnswers[1] < 4:    
-        
-                    await event.respond("جواب شما ثبت شد.")
-                    
-                elif checkQ == False:
-                    
-                    await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+        await event.respond("سوال هارا دونه به دونه با `/Q` وارد کنید:") 
     
     elif event.data == b'15': # This button is for QandA round One
 
