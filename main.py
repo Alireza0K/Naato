@@ -564,8 +564,16 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                                       buttons=keyBoard)
         
         elif regesterTheUser[0] == True:
+            
+            keyBoard = [
+                [
+                    Button.inline("حذف گروه ␡", b"D01")
+                ]
+            ]
 
-            await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", parse_mode="markdown")
+            await client.send_message(event.chat_id, message=f"خیلی هم عالی حالا شما عضو گروه `{id[1]}` شدید \n\nآیدی گروه رو برای پنج تا دیگه از دوست هات هم بفرست تا باهم بازی کنید 🔥🎮\n\nاین آیدی گروه شماست: `{id[0]}`", 
+                                      parse_mode="markdown", 
+                                      buttons=keyBoard)
         
     elif event.data == b"9": # This button do user group changes for second Game or `MORE`!!!
         User = event.sender # locals Sender User.
