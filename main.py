@@ -98,6 +98,16 @@ async def start(event):
                 
         await client.send_message(entity=event.chat_id,message=message,buttons=keyboard)
         
+async def isNarrator(username):
+    
+    check = False
+
+    if username[0][4] == "narrator":
+        
+        check = True
+        
+    return check
+    
 @client.on(events.NewMessage(pattern="/Q")) # This Function for Get questions from Narrator
 async def Q(event):
     
@@ -107,84 +117,96 @@ async def Q(event):
     
     user = cont.GetUserByUName(user)
     
-    usernickname = user[0][4]
+    if await isNarrator(username=user) == True:
     
-    groupID = user[0][5]
-    
-    question = str(event.message.message)
-    
-    question = question.replace("/Q", "")
-    
-    questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=question)
-    
-    if questions[0]:
+        usernickname = user[0][4]
         
-        await client.send_message(event.chat_id,
-        "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1``` \nجواب درست را با `جواب = 1` نشان میدهیم",
-        parse_mode="markdown")
+        groupID = user[0][5]
         
-    elif questions[0] == False:
+        question = str(event.message.message)
+        
+        question = question.replace("/Q", "")
+        
+        questions = cont.QandANarator(userNickName=usernickname, groupID=groupID, Q=question)
+        
+        if questions[0]:
             
-        await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+            await client.send_message(event.chat_id,
+            "**سوال شما ثبت شد🔥**\n\n طبق فرمول زیر جواب هارا لحاظ کنید:\n ```/A\nجواب اول\nجواب دوم\nجواب سوم\nجواب چهارم = 1```\nشما میتونید با `/A` شروع جواب هارو بزنید.\nجواب درست را با `جواب = 1` نشان میدهیم",
+            parse_mode="markdown")
+            
+        elif questions[0] == False:
+                
+            await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+                
+        else:
+                    
+            await event.respond("شما چهار سوال وارد کردید.")
             
     else:
-                
-        await event.respond("شما چهار سوال وارد کردید.")
+        
+        await client.send_message(event.chat_id, "عه عَجیبه تو که راوی نیستی تو ...\nهیچی هستی 🤣")
 
 @client.on(events.NewMessage(pattern="/A")) # This Function inserting answers in to
 async def A(event):
+    
+    print("from -", inspect.stack()[0][3])
     
     user = event.sender
     
     userDB = cont.GetUserByUName(username=user.id)
     
-    print("from -", inspect.stack()[0][3])
-    
-    answers = str(event.message.message)
-    
-    answers = answers.replace("/A", "")
-    
-    checkQ = cont.checkQ(groupID=userDB[0][5])
-    
-    questions = cont.lastQ(groupID=userDB[0][5])
-    
-    edit = answers.split("\n")
-    
-    if " " in edit:
+    if await isNarrator(username=userDB) == True:
         
-        edit.remove(" ")
+        answers = str(event.message.message)
         
-    if "" in edit:
+        answers = answers.replace("/A", "")
+        
+        checkQ = cont.checkQ(groupID=userDB[0][5])
+        
+        questions = cont.lastQ(groupID=userDB[0][5])
+        
+        edit = answers.split("\n")
+        
+        if " " in edit:
             
-        edit.remove("")
+            edit.remove(" ")
             
-        for i in range(0,len(edit)):
+        if "" in edit:
                 
-            ed = edit[i]
+            edit.remove("")
                 
-            ed = ed.split("=")
-                
-            edit[i] = ed
-                
-            answers = edit
-                
-        for answer in answers:
+            for i in range(0,len(edit)):
                     
-            if len(answer) == 2:
+                ed = edit[i]
+                    
+                ed = ed.split("=")
+                    
+                edit[i] = ed
+                    
+                answers = edit
+                    
+            for answer in answers:
                         
-                applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
-                        
-            elif len(answer) == 1:
+                if len(answer) == 2:
                             
-                applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
+                    applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=1)
                             
-        if applyAnswers[0] == True and applyAnswers[1] < 4:
+                elif len(answer) == 1:
                                 
-            await event.respond("جواب شما ثبت شد.")
+                    applyAnswers = cont.AnswersNarrator(question_Hash=questions[1], answers=answer[0], check=0)
                                 
-        elif checkQ == False:
+            if applyAnswers[0] == True and applyAnswers[1] < 4:
                                     
-            await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+                await event.respond("جواب شما ثبت شد.")
+                                    
+            elif checkQ == False:
+                                        
+                await event.respond("هروقت بچه ها آماده بودن دستور `/RA` بزن")
+                
+    else:
+        
+        await client.send_message(event.chat_id, "عه عَجیبه تو که راوی نیستی تو ...\nهیچی هستی 🤣")
 
 async def is_participant(channel, user) -> bool:
     
