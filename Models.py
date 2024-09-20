@@ -77,9 +77,15 @@ class Models:
         
         values = (hashValue, groupName, hashValue)     
         
-        mycursor.execute(sql, values)   
-        
-        myDB.commit()
+        try:
+            
+            mycursor.execute(sql, values)   
+    
+            myDB.commit()
+            
+        except mysql.connector.errors.OperationalError as OPerr:
+            
+            print(OPerr.msg, "- Error Code: ", OPerr)
         
         return [hashValue, groupName]
     

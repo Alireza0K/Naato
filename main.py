@@ -691,13 +691,13 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
 
         if len(countOfAsign) == 0:
             
-            @client.on(events.NewMessage(pattern="NHF:")) # BUUUUUUUUUUG
+            @client.on(events.NewMessage(pattern="NHF:"))
             
             async def AddToGroup(event):
                 
                 print("from -", inspect.stack()[0][3])
                 
-                User = event.sender # locals Sender User.
+                User = event.sender
                 
                 countOfAsign.append(1)
                 
@@ -711,7 +711,7 @@ async def callback(event, CountFirstRound = CountFirstRound, FactCounter = FactC
                         
                     groupName = groupinfo[0][0][2]
                     
-                    groupID = groupinfo[0][0][1] # Bug here 👇
+                    groupID = groupinfo[0][0][1]
                     
                     id = User.id
                     
